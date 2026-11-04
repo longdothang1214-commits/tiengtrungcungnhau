@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tiếng Trung Cùng Nhau</title>
+<meta name="description" content="Tiếng Trung Cùng Nhau: học từ vựng, ôn tập, hội thoại và luyện phát âm cùng bạn bè.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#F3F5FA;--surface:#FFFFFF;--surface2:#EDF0F8;--ink:#172033;--muted:#5B6578;--line:#DCE1EC;
+  --pri:#2A4FA8;--pri-ink:#FFFFFF;--pri-soft:#E3EAFB;--seal:#C23B2E;
+  --ok:#1B7F54;--ok-soft:#DDF3E8;--bad:#B3261E;--bad-soft:#FBE3E0;--grid:#DDE3F0;
+  --sans:"Be Vietnam Pro",system-ui,"Segoe UI",Roboto,sans-serif;
+  --hz:"Noto Serif SC","Songti SC","Noto Serif CJK SC",SimSun,serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1522;--surface:#182033;--surface2:#212B42;--ink:#E8ECF5;--muted:#9AA5BB;--line:#2B364D;
+    --pri:#8AA6FF;--pri-ink:#0F1522;--pri-soft:#232F55;--seal:#E2685B;
+    --ok:#4FC38A;--ok-soft:#173A2E;--bad:#FF8478;--bad-soft:#42211F;--grid:#2A354D;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1522;--surface:#182033;--surface2:#212B42;--ink:#E8ECF5;--muted:#9AA5BB;--line:#2B364D;
+  --pri:#8AA6FF;--pri-ink:#0F1522;--pri-soft:#232F55;--seal:#E2685B;
+  --ok:#4FC38A;--ok-soft:#173A2E;--bad:#FF8478;--bad-soft:#42211F;--grid:#2A354D;
+  color-scheme:dark;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 var(--sans);-webkit-text-size-adjust:100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+a{color:var(--pri)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--pri);outline-offset:2px}
+h1{font-size:28px;line-height:1.25;margin:8px 0 16px;letter-spacing:-.01em}
+h2{font-size:20px;margin:0 0 8px}
+p{margin:0 0 8px}
+.muted{color:var(--muted)}
+.hz{font-family:var(--hz);font-weight:700}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.top-in{max-width:1000px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;color:var(--ink);text-decoration:none}
+.seal{width:32px;height:32px;border-radius:6px;background:var(--seal);color:#fff;display:grid;place-items:center;font:700 20px/1 var(--hz)}
+.mainnav{margin-left:auto;display:flex;gap:2px;flex-wrap:wrap}
+.mainnav a,.mainnav button{border:0;background:transparent;padding:6px 10px;border-radius:8px;cursor:pointer;color:var(--muted);text-decoration:none;font-weight:500;font-size:15px}
+.mainnav a:hover,.mainnav button:hover{background:var(--surface2);color:var(--ink)}
+.mainnav a.on{color:var(--pri);background:var(--pri-soft)}
+.wrap{max-width:1000px;margin:0 auto;padding:20px 16px 64px}
+
+/* buttons & forms */
+.btn{border:1px solid var(--line);background:var(--surface);padding:8px 14px;border-radius:8px;cursor:pointer;font-weight:500;display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:var(--ink)}
+.btn:hover{background:var(--surface2)}
+.btn.pri{background:var(--pri);border-color:var(--pri);color:var(--pri-ink)}
+.btn.pri:hover{filter:brightness(1.1)}
+.btn.sm{padding:4px 10px;font-size:14px}
+.btn.txt{border-color:transparent;background:transparent;color:var(--muted)}
+.btn.txt:hover{color:var(--ink)}
+.btn.danger{color:var(--bad)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.iconbtn{border:1px solid var(--line);background:var(--surface);width:36px;height:36px;border-radius:50%;display:inline-grid;place-items:center;cursor:pointer;color:var(--pri);flex:none}
+.iconbtn:hover{background:var(--pri-soft)}
+.iconbtn svg{width:18px;height:18px}
+input,select,textarea{width:100%;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 10px}
+textarea{resize:vertical;min-height:120px}
+label.f{display:block;margin-bottom:12px;font-size:14px;color:var(--muted)}
+label.f input,label.f select,label.f textarea{margin-top:4px;color:var(--ink)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.row.end{justify-content:flex-end}
+.grow{flex:1;min-width:160px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+
+/* cards, home */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px}
+.center{text-align:center}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.lcard{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.lcard h3{margin:0;font-size:18px}
+.lcard .acts{display:flex;gap:4px;margin-top:auto;align-items:center}
+.prog{height:8px;border-radius:99px;background:var(--surface2);overflow:hidden}
+.prog i{display:block;height:100%;background:var(--ok);border-radius:99px}
+.hero{display:flex;gap:22px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:22px;flex-wrap:wrap}
+.hero-t .py{margin-bottom:2px}
+.hzbox{width:200px;height:200px;flex:none;border:1.5px solid var(--seal);border-radius:4px;display:grid;place-items:center;overflow:hidden;
+  background:
+   linear-gradient(to top right,transparent calc(50% - .5px),var(--grid) calc(50% - .5px),var(--grid) calc(50% + .5px),transparent calc(50% + .5px)),
+   linear-gradient(to bottom right,transparent calc(50% - .5px),var(--grid) calc(50% - .5px),var(--grid) calc(50% + .5px),transparent calc(50% + .5px)),
+   linear-gradient(var(--grid),var(--grid)) center/1px 100% no-repeat,
+   linear-gradient(var(--grid),var(--grid)) center/100% 1px no-repeat,
+   var(--surface)}
+.hzbox .hz{line-height:1;text-align:center;word-break:keep-all}
+.py{color:var(--pri);font-weight:500}
+.py.lg,.vi.lg{font-size:22px}
+.vi.lg{font-weight:600;margin-bottom:8px}
+.back{display:inline-block;margin-bottom:4px;text-decoration:none;color:var(--muted);font-size:14px}
+.back:hover{color:var(--ink)}
+
+/* tabs */
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:18px;overflow-x:auto}
+.tabs button{border:0;background:transparent;padding:10px 14px;cursor:pointer;color:var(--muted);font-weight:500;border-bottom:3px solid transparent;margin-bottom:-1px;white-space:nowrap}
+.tabs button:hover{color:var(--ink)}
+.tabs button[aria-selected="true"]{color:var(--pri);border-bottom-color:var(--pri)}
+
+/* word list */
+.wrow{display:grid;grid-template-columns:36px 110px 1fr auto auto;gap:6px 14px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-bottom:8px}
+.wrow[hidden]{display:none}
+.wrow .big{font-size:28px;line-height:1.2;word-break:keep-all}
+.wrow .ex{font-size:14px;color:var(--muted)}
+.wacts{display:flex;gap:2px}
+.badge{font-size:12px;padding:2px 8px;border-radius:99px;background:var(--surface2);color:var(--muted);white-space:nowrap}
+.badge.ok{background:var(--ok-soft);color:var(--ok)}
+.empty{border:1.5px dashed var(--line);border-radius:14px;padding:28px;text-align:center;color:var(--muted)}
+
+/* flashcard */
+.fcwrap{max-width:460px;margin:0 auto;text-align:center}
+.fcprog{color:var(--muted);font-size:14px;margin-bottom:8px}
+.fcard{display:flex;flex-direction:column;align-items:center;gap:8px;width:100%;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px 18px;cursor:pointer;min-height:340px;justify-content:center;margin-bottom:14px}
+.fcard .hzbox{margin-bottom:6px}
+.fcard .hint{font-size:14px;color:var(--muted)}
+.fcard .ex{font-size:14px;color:var(--muted);max-width:90%}
+
+/* review */
+.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:16px}
+.choice{display:block;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;background:var(--surface)}
+.choice:has(input:checked){border-color:var(--pri);background:var(--pri-soft)}
+.choice input{width:auto;margin:0 8px 0 0}
+.choice b{display:inline}
+.choice small{display:block;color:var(--muted);margin-left:24px}
+.qhead{display:flex;justify-content:space-between;color:var(--muted);font-size:14px;margin-bottom:8px}
+.qprompt{text-align:center;padding:18px 8px}
+.qprompt .hz.huge{font-size:72px;line-height:1.1;word-break:keep-all}
+.qprompt .vi.lg{font-size:26px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.opt{border:1.5px solid var(--line);background:var(--surface);border-radius:12px;padding:14px;cursor:pointer;text-align:center;font-size:17px;min-height:56px}
+.opt:hover:not(:disabled){border-color:var(--pri);background:var(--pri-soft)}
+.opt .hz{font-size:28px;line-height:1.2;display:block}
+.opt small{display:block;color:var(--muted);font-size:14px}
+.opt.ok{border-color:var(--ok);background:var(--ok-soft);color:var(--ok)}
+.opt.bad{border-color:var(--bad);background:var(--bad-soft);color:var(--bad)}
+.fb{border-radius:12px;padding:12px 14px;margin:10px 0}
+.fb.ok{background:var(--ok-soft);color:var(--ok)}
+.fb.bad{background:var(--bad-soft);color:var(--bad)}
+.fb .hz{font-size:24px}
+.fb .ink{color:var(--ink)}
+.score{font-size:56px;font-weight:700;line-height:1;margin:6px 0}
+.match{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}
+.match .opt{padding:10px}
+.match .opt.sel{border-color:var(--pri);background:var(--pri-soft)}
+.match .opt:disabled{opacity:.85}
+
+/* dialogs */
+.bubs{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.bub{display:block;text-align:left;max-width:82%;border:1px solid var(--line);background:var(--surface2);border-radius:14px;padding:8px 14px;cursor:pointer}
+.bub.r{align-self:flex-end;background:var(--pri-soft);border-color:transparent}
+.bub .sp{font-size:12px;color:var(--muted);display:block}
+.bub .hz{font-size:22px;line-height:1.35}
+.bub .py,.bub .vi{display:block;font-size:14px}
+.bub .vi{color:var(--muted)}
+.hide-py .bub .py{display:none}
+.hide-vi .bub .vi{display:none}
+.checks{display:flex;gap:16px;flex-wrap:wrap;font-size:14px}
+.checks label{display:flex;gap:6px;align-items:center;cursor:pointer}
+.checks input{width:auto}
+
+/* record */
+canvas#meter{width:100%;max-width:360px;height:64px;display:block;margin:10px auto}
+.bigbtn{width:84px;height:84px;border-radius:50%;border:0;background:var(--seal);color:#fff;cursor:pointer;display:inline-grid;place-items:center;font-weight:600}
+.bigbtn.play{background:var(--pri);color:var(--pri-ink)}
+.bigbtn svg{width:34px;height:34px}
+.rtime{font-variant-numeric:tabular-nums;color:var(--muted)}
+.note{font-size:14px;color:var(--muted);border-left:3px solid var(--line);padding-left:10px;margin:12px 0}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px}
+.stat b{display:block;font-size:30px;line-height:1.1}
+.stat span{color:var(--muted);font-size:14px}
+.bars{display:flex;gap:8px;height:160px;align-items:flex-end}
+.bar{flex:1;height:100%;display:flex;align-items:flex-end}
+.bar i{display:flex;justify-content:center;width:100%;height:var(--h);min-height:20px;background:var(--pri);border-radius:6px 6px 0 0;color:var(--pri-ink);font-size:12px;font-style:normal;padding-top:3px}
+.hist{width:100%;border-collapse:collapse;font-size:14px}
+.hist td,.hist th{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left}
+.hist th{color:var(--muted);font-weight:500}
+.scroll-x{overflow-x:auto}
+.section{margin:24px 0 10px;font-size:18px}
+
+/* modal, toast */
+.mback{position:fixed;inset:0;background:rgba(10,15,28,.55);display:grid;place-items:center;z-index:100;padding:16px}
+.modal{background:var(--surface);color:var(--ink);border-radius:16px;padding:20px;width:100%;max-width:520px;max-height:90vh;overflow:auto;border:1px solid var(--line)}
+.mfoot{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
+.hint{font-size:13px;color:var(--muted)}
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:200;max-width:90vw;font-size:15px}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media (max-width:640px){
+  h1{font-size:24px}
+  .wrow{grid-template-columns:36px 1fr auto;}
+  .wrow .hz.big{grid-column:2}
+  .wrow .wmain{grid-column:1 / -1}
+  .wrow .badge{justify-self:end}
+  .wrow .wacts{grid-column:1 / -1;justify-content:flex-end}
+  .hzbox{width:160px;height:160px}
+  .opts{grid-template-columns:1fr}
+  .bub{max-width:94%}
+}
+@media (prefers-reduced-motion:reduce){#toast{transition:none}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <a class="brand" href="#home"><span class="seal" aria-hidden="true">学</span><span>Tiếng Trung Cùng Nhau</span></a>
+    <nav class="mainnav" aria-label="Điều hướng chính">
+      <a href="#home" id="nav-home">Bài học</a>
+      <a href="#stats" id="nav-stats">Thống kê</a>
+      <button type="button" data-act="backup">Sao lưu</button>
+      <button type="button" data-act="theme" aria-label="Đổi giao diện sáng hoặc tối">Sáng/Tối</button>
+    </nav>
+  </div>
+</header>
+<main id="app" class="wrap"></main>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+'use strict';
+
+/* ---------- helpers ---------- */
+const $=(s,r)=>(r||document).querySelector(s);
+const $$=(s,r)=>Array.from((r||document).querySelectorAll(s));
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>'x'+Math.random().toString(36).slice(2,8)+Date.now().toString(36).slice(-3);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const strip=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+const SPK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>';
+const MIC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>';
+const STOP='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>';
+const PLAY='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
+const hzSize=s=>{const n=Array.from(s||'').length;return n<=1?112:n===2?80:n===3?56:n===4?44:34;};
+
+function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function lsSet(k,v){try{localStorage.setItem(k,v);return true;}catch(e){return false;}}
+
+let tt;
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),3600);}
+
+/* ---------- data ---------- */
+const KEY='hoc-tieng-trung-v1',TKEY='htt-theme';
+
+function sample(){
+  const L1='xa1',L2='xa2',L3='xa3';
+  const mk=(l,a)=>a.map(r=>({id:uid(),lessonId:l,hanzi:r[0],pinyin:r[1],vi:r[2],example:r[3]||'',note:'',known:false,c:0,w:0}));
+  return {
+    lessons:[{id:L1,name:'Chào hỏi'},{id:L2,name:'Số đếm 1–10'},{id:L3,name:'Ăn uống'}],
+    words:[
+      ...mk(L1,[['你好','nǐ hǎo','xin chào','你好，我是小明。'],['谢谢','xièxie','cảm ơn'],['不客气','bú kèqi','đừng khách sáo'],['对不起','duìbuqǐ','xin lỗi'],['没关系','méi guānxi','không sao'],['再见','zàijiàn','tạm biệt'],['请','qǐng','xin mời, làm ơn'],['我','wǒ','tôi'],['你','nǐ','bạn'],['是','shì','là']]),
+      ...mk(L2,[['一','yī','một'],['二','èr','hai'],['三','sān','ba'],['四','sì','bốn'],['五','wǔ','năm'],['六','liù','sáu'],['七','qī','bảy'],['八','bā','tám'],['九','jiǔ','chín'],['十','shí','mười']]),
+      ...mk(L3,[['水','shuǐ','nước'],['茶','chá','trà'],['米饭','mǐfàn','cơm'],['苹果','píngguǒ','quả táo'],['面条','miàntiáo','mì'],['咖啡','kāfēi','cà phê'],['牛奶','niúnǎi','sữa'],['吃','chī','ăn'],['喝','hē','uống'],['好吃','hǎochī','ngon']])
+    ],
+    dialogs:[{id:uid(),lessonId:L1,title:'Lần đầu gặp nhau',lines:[
+      {speaker:'A',hanzi:'你好！',pinyin:'Nǐ hǎo!',vi:'Xin chào!'},
+      {speaker:'B',hanzi:'你好，你叫什么名字？',pinyin:'Nǐ hǎo, nǐ jiào shénme míngzi?',vi:'Xin chào, bạn tên là gì?'},
+      {speaker:'A',hanzi:'我叫小明。',pinyin:'Wǒ jiào Xiǎo Míng.',vi:'Tôi tên là Tiểu Minh.'},
+      {speaker:'B',hanzi:'很高兴认识你。',pinyin:'Hěn gāoxìng rènshi nǐ.',vi:'Rất vui được làm quen với bạn.'},
+      {speaker:'A',hanzi:'我也是。',pinyin:'Wǒ yě shì.',vi:'Tôi cũng vậy.'}
+    ]}],
+    history:[]
+  };
+}
+function norm(d){
+  if(!d||!Array.isArray(d.lessons)||!Array.isArray(d.words))return null;
+  d.dialogs=Array.isArray(d.dialogs)?d.dialogs:[];
+  d.history=Array.isArray(d.history)?d.history:[];
+  d.words=d.words.filter(w=>w&&w.id&&w.hanzi).map(w=>({id:String(w.id),lessonId:String(w.lessonId||''),hanzi:String(w.hanzi),pinyin:String(w.pinyin||''),vi:String(w.vi||''),example:String(w.example||''),note:String(w.note||''),known:!!w.known,c:+w.c||0,w:+w.w||0}));
+  return d;
+}
+function load(){const s=lsGet(KEY);if(s){try{return norm(JSON.parse(s));}catch(e){}}return null;}
+let db=load()||sample();
+let saveWarned=false;
+function save(){if(!lsSet(KEY,JSON.stringify(db))&&!saveWarned){saveWarned=true;toast('Trình duyệt không cho lưu dữ liệu. Hãy dùng mục Sao lưu để giữ lại nội dung.');}}
+
+/* ---------- state ---------- */
+const newRec=()=>({mode:'duo',phase:'pick',wordId:'',url:null,opts:[],pick:null,heard:[],sr:'none',srDone:false});
+const S={route:'home',lessonId:null,tab:'vocab',fc:null,rv:null,rvCfg:{mode:'mix',count:10,weighted:true},dlg:{py:true,vi:true},rec:newRec(),recScore:{right:0,total:0},daily:null,playTok:0};
+const byId=id=>db.words.find(w=>w.id===id);
+const lessonName=id=>{const l=db.lessons.find(x=>x.id===id);return l?l.name:'';};
+function curLesson(){return S.lessonId==='all'?{id:'all',name:'Tất cả bài'}:db.lessons.find(l=>l.id===S.lessonId);}
+function pool(){return S.lessonId==='all'?db.words:db.words.filter(w=>w.lessonId===S.lessonId);}
+
+/* ---------- speech ---------- */
+let zhVoice=null;
+function pickVoice(){if(!('speechSynthesis' in window))return;const v=speechSynthesis.getVoices().filter(x=>/^zh/i.test(x.lang));zhVoice=v.find(x=>/CN|cmn/i.test(x.lang))||v[0]||null;}
+if('speechSynthesis' in window){pickVoice();speechSynthesis.onvoiceschanged=pickVoice;}
+function speak(t,cb){
+  if(!('speechSynthesis' in window)){toast('Trình duyệt này chưa hỗ trợ đọc phát âm.');cb&&cb();return;}
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(t);u.lang='zh-CN';if(zhVoice)u.voice=zhVoice;u.rate=.85;
+  u.onend=()=>cb&&cb();u.onerror=()=>cb&&cb();
+  speechSynthesis.speak(u);
+}
+
+/* ---------- modal ---------- */
+function modal(title,body,ok,onOk,cancelLabel){
+  const back=document.createElement('div');back.className='mback';
+  back.innerHTML='<div class="modal" role="dialog" aria-modal="true" aria-label="'+esc(title)+'"><h2>'+esc(title)+'</h2><div>'+body+'</div><div class="mfoot"><button type="button" class="btn" data-m="cancel">'+esc(cancelLabel||'Huỷ')+'</button>'+(ok?'<button type="button" class="btn pri" data-m="ok">'+esc(ok)+'</button>':'')+'</div></div>';
+  document.body.appendChild(back);
+  const onKey=e=>{if(e.key==='Escape')close();};
+  const close=()=>{back.remove();document.removeEventListener('keydown',onKey);};
+  document.addEventListener('keydown',onKey);
+  back.addEventListener('click',e=>{
+    if(e.target===back){close();return;}
+    const b=e.target.closest('[data-m]');if(!b)return;
+    if(b.dataset.m==='cancel')close();
+    else if(onOk(back)!==false)close();
+  });
+  const f=$('input,textarea,select',back);if(f)f.focus();
+  return {el:back,close};
+}
+function ask(msg,yes,fn){return modal('Xác nhận','<p>'+msg+'</p>',yes,()=>{fn();});}
+
+/* ---------- render ---------- */
+function render(){
+  const app=$('#app');
+  if(S.route==='home')app.innerHTML=viewHome();
+  else if(S.route==='stats')app.innerHTML=viewStats();
+  else app.innerHTML=viewLesson();
+  $('#nav-home').classList.toggle('on',S.route==='home'||S.route==='lesson');
+  $('#nav-stats').classList.toggle('on',S.route==='stats');
+  const af=$('[data-autofocus]');if(af)af.focus();
+  if(S.route==='lesson'&&S.tab==='review'&&S.rv&&S.rv.phase==='q'){
+    const q=S.rv.qs[S.rv.i];
+    if(q.type==='listen'&&!q.spoken&&q.pick==null){q.spoken=true;speak(q.w.hanzi);}
+  }
+}
+
+/* ---------- home ---------- */
+function viewHome(){
+  const ws=db.words;
+  let dw=byId(S.daily);
+  if(!dw&&ws.length){const c=ws.filter(w=>!w.known);const p=c.length?c:ws;dw=p[Math.floor(Math.random()*p.length)];S.daily=dw.id;}
+  const hero=dw?'<section class="hero"><div class="hzbox"><span class="hz" style="font-size:'+hzSize(dw.hanzi)+'px">'+esc(dw.hanzi)+'</span></div><div class="hero-t"><p class="muted">Từ gợi ý hôm nay</p><div class="py lg">'+esc(dw.pinyin)+'</div><div class="vi lg">'+esc(dw.vi)+'</div><div class="row"><button class="btn" data-act="speak" data-id="'+dw.id+'">'+SPK+' Nghe</button><button class="btn txt" data-act="daily">Từ khác</button></div></div></section>':'';
+  const cards=db.lessons.map(l=>{
+    const lw=ws.filter(w=>w.lessonId===l.id),k=lw.filter(w=>w.known).length,pct=lw.length?Math.round(k*100/lw.length):0;
+    const nd=db.dialogs.filter(d=>d.lessonId===l.id).length;
+    return '<article class="lcard"><h3>'+esc(l.name)+'</h3><div class="muted">'+lw.length+' từ, '+nd+' hội thoại</div><div><div class="prog" role="progressbar" aria-valuenow="'+pct+'" aria-valuemin="0" aria-valuemax="100" aria-label="Tiến độ"><i style="width:'+pct+'%"></i></div><div class="hint">Đã thuộc '+k+'/'+lw.length+'</div></div><div class="acts"><a class="btn pri sm" href="#lesson-'+l.id+'">Mở bài</a><button class="btn txt sm" data-act="rename-lesson" data-id="'+l.id+'">Đổi tên</button><button class="btn txt sm danger" data-act="del-lesson" data-id="'+l.id+'">Xoá</button></div></article>';
+  }).join('');
+  const all='<article class="lcard"><h3>Ôn tập tất cả bài</h3><div class="muted">'+ws.length+' từ từ mọi bài</div><div class="acts"><a class="btn sm" href="#lesson-all">Mở</a></div></article>';
+  return hero+'<div class="toolbar"><h1 class="grow" style="margin:0">Bài học của bạn</h1><button class="btn pri" data-act="new-lesson">+ Tạo bài mới</button></div><div class="grid">'+cards+all+'</div>';
+}
+function lessonModal(id){
+  const l=id?db.lessons.find(x=>x.id===id):null;
+  modal(l?'Đổi tên bài':'Tạo bài mới','<label class="f">Tên bài<input name="name" value="'+esc(l?l.name:'')+'" maxlength="60" placeholder="Ví dụ: Gia đình"></label>',l?'Lưu':'Tạo bài',m=>{
+    const n=$('[name="name"]',m).value.trim();if(!n){toast('Hãy nhập tên bài.');return false;}
+    if(l)l.name=n;else db.lessons.push({id:uid(),name:n});
+    save();render();
+  });
+}
+
+/* ---------- lesson ---------- */
+function viewLesson(){
+  const l=curLesson();
+  const tabs=[['vocab','Từ vựng'],['review','Ôn tập'],['dialog','Hội thoại'],['record','Ghi âm đoán từ']];
+  let body='';
+  if(S.tab==='vocab')body=tabVocab();
+  else if(S.tab==='review')body=tabReview();
+  else if(S.tab==='dialog')body=tabDialog();
+  else body=tabRecord();
+  return '<a class="back" href="#home">← Tất cả bài</a><h1>'+esc(l.name)+'</h1><div class="tabs" role="tablist">'+tabs.map(t=>'<button type="button" role="tab" aria-selected="'+(S.tab===t[0])+'" data-act="tab" data-t="'+t[0]+'">'+t[1]+'</button>').join('')+'</div>'+body;
+}
+
+/* ----- vocab ----- */
+function tabVocab(){
+  if(S.fc)return viewFlash();
+  const ws=pool(),all=S.lessonId==='all',nNew=ws.filter(w=>!w.known).length;
+  const bar='<div class="toolbar">'+(all?'':'<button class="btn pri" data-act="add-word">+ Thêm từ</button><button class="btn" data-act="bulk">Nhập nhiều từ</button>')+
+    '<button class="btn" data-act="fc-start" data-only="0"'+(ws.length?'':' disabled')+'>Học flashcard</button>'+
+    (nNew>0&&nNew<ws.length?'<button class="btn" data-act="fc-start" data-only="1">Flashcard: chưa thuộc ('+nNew+')</button>':'')+
+    '<div class="grow"><input id="q-search" type="search" placeholder="Tìm từ, pinyin hoặc nghĩa" aria-label="Tìm từ"></div></div>';
+  if(!ws.length)return bar+'<div class="empty">'+(all?'Chưa có từ nào.':'Bài này chưa có từ. Bấm “Thêm từ” hoặc “Nhập nhiều từ” để bắt đầu.')+'</div>';
+  const rows=ws.map(w=>'<div class="wrow" data-q="'+esc((w.hanzi+' '+w.pinyin+' '+strip(w.pinyin)+' '+w.vi+' '+strip(w.vi)).toLowerCase())+'"><button class="iconbtn" data-act="speak" data-id="'+w.id+'" aria-label="Nghe '+esc(w.hanzi)+'">'+SPK+'</button><div class="hz big">'+esc(w.hanzi)+'</div><div class="wmain"><div class="py">'+esc(w.pinyin)+'</div><div>'+esc(w.vi)+'</div>'+(w.example?'<div class="ex">'+esc(w.example)+'</div>':'')+'</div><span class="badge'+(w.known?' ok':'')+'">'+(w.known?'Đã thuộc':'Chưa thuộc')+'</span><div class="wacts"><button class="btn txt sm" data-act="edit-word" data-id="'+w.id+'">Sửa</button><button class="btn txt sm danger" data-act="del-word" data-id="'+w.id+'">Xoá</button></div></div>').join('');
+  return bar+'<div id="wlist">'+rows+'</div>';
+}
+function wordModal(id){
+  const w=id?byId(id):null;
+  const v=k=>esc(w?w[k]:'');
+  modal(w?'Sửa từ':'Thêm từ',
+    '<label class="f">Chữ Hán<input name="hanzi" value="'+v('hanzi')+'" placeholder="你好"></label><label class="f">Pinyin<input name="pinyin" value="'+v('pinyin')+'" placeholder="nǐ hǎo"></label><label class="f">Nghĩa tiếng Việt<input name="vi" value="'+v('vi')+'" placeholder="xin chào"></label><label class="f">Câu ví dụ (không bắt buộc)<input name="example" value="'+v('example')+'"></label><label class="f">Ghi chú (không bắt buộc)<input name="note" value="'+v('note')+'"></label>',
+    'Lưu',m=>{
+      const g=k=>$('[name="'+k+'"]',m).value.trim();
+      if(!g('hanzi')||!g('vi')){toast('Cần nhập chữ Hán và nghĩa.');return false;}
+      const d={hanzi:g('hanzi'),pinyin:g('pinyin'),vi:g('vi'),example:g('example'),note:g('note')};
+      if(w)Object.assign(w,d);else db.words.push(Object.assign({id:uid(),lessonId:S.lessonId,known:false,c:0,w:0},d));
+      save();render();toast(w?'Đã lưu từ.':'Đã thêm từ.');
+    });
+}
+function parseWords(txt){
+  return txt.split(/\r?\n/).map(l=>l.trim()).filter(Boolean).map(l=>{
+    const p=(l.includes('\t')?l.split('\t'):l.includes('|')?l.split('|'):l.split(/[,，;；]/)).map(x=>x.trim().replace(/^"|"$/g,''));
+    return p;
+  }).filter(p=>p.length>=2&&p[0]).map(p=>({hanzi:p[0],pinyin:p.length>=3?p[1]:'',vi:p.length>=3?p[2]:p[1],example:p[3]||''}));
+}
+function bulkModal(){
+  modal('Nhập nhiều từ',
+    '<p class="hint">Mỗi dòng một từ, ngăn cách bằng dấu | hoặc dấu phẩy hoặc Tab:<br><b>chữ Hán | pinyin | nghĩa | câu ví dụ</b><br>Có thể bỏ pinyin (chỉ cần chữ Hán và nghĩa) và bỏ câu ví dụ.</p><label class="f">Dán danh sách từ<textarea name="txt" rows="8" placeholder="你好 | nǐ hǎo | xin chào&#10;谢谢 | xièxie | cảm ơn"></textarea></label><label class="f">Hoặc chọn file CSV, TXT<input type="file" name="file" accept=".csv,.txt,.tsv"></label>',
+    'Thêm vào bài',m=>{
+      const list=parseWords($('[name="txt"]',m).value);
+      if(!list.length){toast('Chưa đọc được từ nào. Kiểm tra lại định dạng từng dòng.');return false;}
+      list.forEach(d=>db.words.push(Object.assign({id:uid(),lessonId:S.lessonId,note:'',known:false,c:0,w:0},d)));
+      save();render();toast('Đã thêm '+list.length+' từ.');
+    });
+  const fi=$('[name="file"]');
+  fi.addEventListener('change',()=>{const f=fi.files&&fi.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{$('[name="txt"]').value=String(r.result||'');};r.onerror=()=>toast('Không đọc được file này.');r.readAsText(f,'utf-8');});
+}
+
+/* ----- flashcards ----- */
+function startFlash(only,ids){
+  let ws=pool();
+  if(ids)ws=ids.map(byId).filter(Boolean);
+  else if(only){const n=ws.filter(w=>!w.known);if(n.length)ws=n;}
+  if(!ws.length){toast('Chưa có từ nào để học.');return;}
+  S.fc={deck:shuffle(ws.map(w=>w.id)),i:0,flip:false,known:0,again:[]};
+}
+function viewFlash(){
+  const f=S.fc;
+  if(f.i>=f.deck.length){
+    return '<div class="card center"><h2>Xong lượt học</h2><p>Bạn đã thuộc '+f.known+'/'+f.deck.length+' từ trong lượt này.</p><div class="row" style="justify-content:center"><button class="btn pri" data-act="fc-again"'+(f.again.length?'':' disabled')+'>Học lại '+f.again.length+' từ chưa thuộc</button><button class="btn" data-act="fc-exit">Về danh sách</button></div></div>';
+  }
+  const w=byId(f.deck[f.i]);
+  const face=f.flip?'<div class="py lg">'+esc(w.pinyin)+'</div><div class="vi lg">'+esc(w.vi)+'</div>'+(w.example?'<div class="ex">'+esc(w.example)+'</div>':'')+(w.note?'<div class="ex">'+esc(w.note)+'</div>':''):'<div class="hint">Chạm vào thẻ hoặc bấm phím cách để xem nghĩa</div>';
+  return '<div class="fcwrap"><div class="fcprog">Thẻ '+(f.i+1)+'/'+f.deck.length+'</div><button class="fcard" data-act="fc-flip" aria-label="Lật thẻ"><span class="hzbox"><span class="hz" style="font-size:'+hzSize(w.hanzi)+'px">'+esc(w.hanzi)+'</span></span>'+face+'</button><div class="row" style="justify-content:center"><button class="iconbtn" data-act="speak" data-id="'+w.id+'" aria-label="Nghe">'+SPK+'</button><button class="btn" data-act="fc-dont">Chưa thuộc</button><button class="btn pri" data-act="fc-know">Đã thuộc</button></div><p style="margin-top:12px"><button class="btn txt sm" data-act="fc-exit">Thoát</button></p></div>';
+}
+
+/* ----- review ----- */
+function mark(w,ok){
+  if(ok){w.c++;if(w.c-w.w>=3)w.known=true;}else{w.w++;w.known=false;}
+  save();
+}
+function pickWords(ws,n,weighted){
+  n=n==='all'?ws.length:Math.min(+n,ws.length);
+  return ws.map(w=>{
+    const wt=Math.max(.3,1+w.w*1.5+(w.known?0:1)-Math.min(w.c,3)*.3);
+    return {w,k:weighted?Math.pow(Math.random(),1/wt):Math.random()};
+  }).sort((a,b)=>b.k-a.k).slice(0,n).map(x=>x.w);
+}
+function makeOpts(w,type){
+  const same=type==='mcvi'?x=>x.vi===w.vi:x=>x.hanzi===w.hanzi;
+  const inPool=shuffle(pool().filter(x=>x.id!==w.id&&!same(x)));
+  const rest=shuffle(db.words.filter(x=>x.id!==w.id&&!same(x)&&!inPool.includes(x)));
+  return shuffle([w].concat(inPool.concat(rest).slice(0,3)));
+}
+function tabReview(){
+  const ws=pool();
+  if(ws.length<1)return '<div class="empty">Thêm vài từ ở tab Từ vựng rồi quay lại để làm bài ôn tập.</div>';
+  if(!S.rv)return viewRvSetup(ws);
+  if(S.rv.phase==='q')return viewQ();
+  if(S.rv.phase==='match')return viewMatch();
+  return viewRvResult();
+}
+function viewRvSetup(ws){
+  const c=S.rvCfg;
+  const modes=[['mix','Hỗn hợp','Trộn nhiều dạng câu hỏi'],['mcvi','Chọn nghĩa','Thấy chữ Hán, chọn nghĩa tiếng Việt'],['mchz','Chọn chữ Hán','Thấy nghĩa, chọn chữ Hán đúng'],['type','Gõ đáp án','Thấy nghĩa, gõ pinyin hoặc chữ Hán'],['listen','Nghe và chọn','Nghe phát âm, chọn chữ Hán'],['match','Ghép cặp','Nối chữ Hán với nghĩa']];
+  return '<div class="card"><h2>Làm bài ôn tập</h2><p class="muted">Câu hỏi lấy từ '+ws.length+' từ trong bài này.</p><div class="choices">'+modes.map(m=>'<label class="choice"><input type="radio" name="mode" value="'+m[0]+'"'+(c.mode===m[0]?' checked':'')+'><b>'+m[1]+'</b><small>'+m[2]+'</small></label>').join('')+'</div><div class="row" style="margin-bottom:14px"><label class="f" style="margin:0">Số từ<select id="rv-count">'+[5,10,20,'all'].map(n=>'<option value="'+n+'"'+(String(c.count)===String(n)?' selected':'')+'>'+(n==='all'?'Tất cả':n)+'</option>').join('')+'</select></label><label class="checks" style="margin-top:18px"><span style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="rv-weighted"'+(c.weighted?' checked':'')+'> Ưu tiên từ hay sai và chưa thuộc</span></label></div><button class="btn pri" data-act="rv-start">Bắt đầu</button></div>';
+}
+function rvStart(ids){
+  const mode=($('input[name="mode"]:checked')||{value:S.rvCfg.mode}).value;
+  const cEl=$('#rv-count'),wEl=$('#rv-weighted');
+  if(cEl)S.rvCfg={mode,count:cEl.value==='all'?'all':+cEl.value,weighted:!!(wEl&&wEl.checked)};
+  const cfg=S.rvCfg;
+  const ws=ids?ids.map(byId).filter(Boolean):pickWords(pool(),cfg.count,cfg.weighted);
+  if(!ws.length){toast('Chưa có từ để ôn.');return;}
+  if(cfg.mode==='match'){
+    if(ws.length<2){toast('Ghép cặp cần ít nhất 2 từ.');return;}
+    S.rv={phase:'match',words:shuffle(ws),r:0,results:[],cur:null};
+    matchRound();return;
+  }
+  const types=['mcvi','mchz','type','listen'];
+  const qs=shuffle(ws).map(w=>{
+    let type=cfg.mode==='mix'?types[Math.floor(Math.random()*4)]:cfg.mode;
+    if(type!=='type'&&db.words.length<2)type='type';
+    const q={w,type,pick:null,ans:null,ok:null,spoken:false};
+    if(type!=='type')q.opts=makeOpts(w,type);
+    return q;
+  });
+  S.rv={phase:'q',qs,i:0,results:[]};
+}
+function viewQ(){
+  const r=S.rv,q=r.qs[r.i],w=q.w,done=q.ok!==null;
+  const okN=r.results.filter(x=>x.ok).length;
+  let prompt='',hintTxt='';
+  if(q.type==='mcvi'){prompt='<div class="hz huge">'+esc(w.hanzi)+'</div>'+(done?'<div class="py lg">'+esc(w.pinyin)+'</div>':'');hintTxt='Chọn nghĩa đúng';}
+  else if(q.type==='mchz'){prompt='<div class="vi lg">'+esc(w.vi)+'</div>';hintTxt='Chọn chữ Hán đúng';}
+  else if(q.type==='listen'){prompt='<button class="bigbtn play" data-act="speak" data-id="'+w.id+'" aria-label="Nghe lại">'+SPK+'</button>';hintTxt='Nghe và chọn từ bạn nghe được';}
+  else{prompt='<div class="vi lg">'+esc(w.vi)+'</div><div><button class="btn sm" data-act="speak" data-id="'+w.id+'">'+SPK+' Nghe</button></div>';hintTxt='Gõ pinyin (có hoặc không dấu thanh) hoặc chữ Hán';}
+  let ans='';
+  if(q.type==='type'){
+    ans=done?'':'<form data-form="rv-submit" class="row"><div class="grow"><input id="ans" data-autofocus autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Đáp án của bạn" aria-label="Đáp án"></div><button class="btn pri" type="submit">Kiểm tra</button><button class="btn txt" type="button" data-act="rv-skip">Bỏ qua</button></form>';
+  }else{
+    ans='<div class="opts">'+q.opts.map((o,i)=>{
+      let cls='opt';if(done){if(o.id===w.id)cls+=' ok';else if(q.pick===i)cls+=' bad';}
+      const inner=q.type==='mcvi'?esc(o.vi):'<span class="hz">'+esc(o.hanzi)+'</span>'+(done?'<small>'+esc(o.pinyin)+'</small>':'');
+      return '<button class="'+cls+'" data-act="rv-pick" data-i="'+i+'"'+(done?' disabled':'')+'>'+inner+'</button>';
+    }).join('')+'</div>';
+  }
+  let fb='';
+  if(done){
+    fb='<div class="fb '+(q.ok?'ok':'bad')+'"><b>'+(q.ok?'Đúng rồi!':'Chưa đúng.')+'</b>'+(q.note?' '+esc(q.note):'')+'<div class="ink"><span class="hz">'+esc(w.hanzi)+'</span> '+esc(w.pinyin)+' = '+esc(w.vi)+'</div></div><div class="row"><button class="iconbtn" data-act="speak" data-id="'+w.id+'" aria-label="Nghe">'+SPK+'</button><button class="btn pri" data-act="rv-next" data-autofocus>'+(r.i+1>=r.qs.length?'Xem kết quả':'Câu tiếp theo')+'</button></div>';
+  }
+  return '<div class="card"><div class="qhead"><span>Câu '+(r.i+1)+'/'+r.qs.length+'</span><span>Đúng '+okN+'</span></div><div class="prog"><i style="width:'+Math.round(r.i*100/r.qs.length)+'%;background:var(--pri)"></i></div><div class="qprompt">'+prompt+'<p class="hint" style="margin-top:8px">'+hintTxt+'</p></div>'+ans+fb+'</div>';
+}
+function checkTyped(inp,w){
+  const a=inp.trim().replace(/\s+/g,'').toLowerCase();
+  if(!a)return {ok:false};
+  if(a===w.hanzi.replace(/\s+/g,''))return {ok:true};
+  const py=w.pinyin.replace(/\s+/g,'').toLowerCase();
+  if(py&&a===py)return {ok:true};
+  if(py&&strip(a)===strip(py))return {ok:true,note:'Đúng từ, nhưng dấu thanh chưa khớp: '+w.pinyin+'.'};
+  return {ok:false};
+}
+function rvAnswer(ok,note){
+  const r=S.rv,q=r.qs[r.i];
+  q.ok=ok;q.note=note||'';
+  mark(q.w,ok);r.results.push({id:q.w.id,ok});
+}
+function rvFinish(){
+  const r=S.rv,total=r.results.length,correct=r.results.filter(x=>x.ok).length;
+  db.history.push({t:Date.now(),kind:'Ôn tập',scope:curLesson().name,total,correct});
+  if(db.history.length>300)db.history=db.history.slice(-300);
+  save();r.phase='result';
+}
+function viewRvResult(){
+  const r=S.rv,total=r.results.length,correct=r.results.filter(x=>x.ok).length,pct=total?Math.round(correct*100/total):0;
+  const wrong=r.results.filter(x=>!x.ok).map(x=>byId(x.id)).filter(Boolean);
+  const msg=pct>=90?'Rất tốt. Bạn nhớ gần hết số từ này.':pct>=60?'Khá ổn. Ôn lại vài từ sai là chắc hơn.':'Cần ôn thêm. Thử học flashcard trước rồi làm lại.';
+  return '<div class="card center"><h2>Kết quả</h2><div class="score">'+correct+'/'+total+'</div><p class="muted">'+pct+'% đúng. '+msg+'</p><div class="row" style="justify-content:center"><button class="btn pri" data-act="rv-reset">Làm bài mới</button>'+(wrong.length?'<button class="btn" data-act="rv-redo">Ôn lại '+wrong.length+' từ sai</button><button class="btn" data-act="rv-flash">Học flashcard các từ sai</button>':'')+'</div></div>'+(wrong.length?'<h3 class="section">Từ cần ôn lại</h3>'+wrong.map(w=>'<div class="wrow" style="grid-template-columns:36px 110px 1fr"><button class="iconbtn" data-act="speak" data-id="'+w.id+'" aria-label="Nghe">'+SPK+'</button><div class="hz big">'+esc(w.hanzi)+'</div><div><div class="py">'+esc(w.pinyin)+'</div><div>'+esc(w.vi)+'</div></div></div>').join(''):'');
+}
+/* match game */
+function matchRound(){
+  const r=S.rv,chunk=r.words.slice(r.r*5,r.r*5+5);
+  r.cur={left:chunk,right:shuffle(chunk),done:{},wrong:{},sel:null,bad:null};
+}
+function viewMatch(){
+  const r=S.rv,c=r.cur,total=r.words.length,rounds=Math.ceil(total/5);
+  const finished=Object.keys(c.done).length===c.left.length;
+  const left=c.left.map(w=>'<button class="opt'+(c.done[w.id]?' ok':'')+(c.sel===w.id?' sel':'')+(c.bad&&c.bad.l===w.id?' bad':'')+'" data-act="mt-l" data-id="'+w.id+'"'+(c.done[w.id]?' disabled':'')+'><span class="hz">'+esc(w.hanzi)+'</span></button>').join('');
+  const right=c.right.map(w=>'<button class="opt'+(c.done[w.id]?' ok':'')+(c.bad&&c.bad.r===w.id?' bad':'')+'" data-act="mt-r" data-id="'+w.id+'"'+(c.done[w.id]?' disabled':'')+'>'+esc(w.vi)+'</button>').join('');
+  return '<div class="card"><div class="qhead"><span>Vòng '+(r.r+1)+'/'+rounds+'</span><span>Đã nối '+r.results.length+'/'+total+'</span></div><p class="hint">Bấm một chữ Hán ở cột trái, rồi bấm nghĩa tương ứng ở cột phải.</p><div class="match"><div style="display:grid;gap:10px">'+left+'</div><div style="display:grid;gap:10px">'+right+'</div></div>'+(finished?'<div class="row" style="margin-top:14px"><button class="btn pri" data-act="mt-next" data-autofocus>'+(r.r+1>=rounds?'Xem kết quả':'Vòng tiếp theo')+'</button></div>':'')+'</div>';
+}
+
+/* ---------- dialogs ---------- */
+function tabDialog(){
+  const all=S.lessonId==='all';
+  const ds=all?db.dialogs:db.dialogs.filter(d=>d.lessonId===S.lessonId);
+  const bar='<div class="toolbar">'+(all?'':'<button class="btn pri" data-act="add-dlg">+ Thêm hội thoại</button>')+'<div class="checks grow"><label><input type="checkbox" data-act="dlg-py"'+(S.dlg.py?' checked':'')+'> Hiện pinyin</label><label><input type="checkbox" data-act="dlg-vi"'+(S.dlg.vi?' checked':'')+'> Hiện nghĩa</label></div></div>';
+  if(!ds.length)return bar+'<div class="empty">Chưa có hội thoại nào. Phần này không bắt buộc, bạn chỉ cần thêm khi muốn luyện nghe và đọc theo đoạn hội thoại.</div>';
+  return bar+ds.map(d=>{
+    const first=d.lines[0]?d.lines[0].speaker:'';
+    return '<section class="card" style="margin-bottom:14px"><div class="toolbar" style="margin-bottom:0"><h2 class="grow" style="margin:0">'+esc(d.title)+'</h2><button class="btn sm" data-act="dlg-play" data-id="'+d.id+'">'+SPK+' Nghe cả đoạn</button><button class="btn txt sm" data-act="edit-dlg" data-id="'+d.id+'">Sửa</button><button class="btn txt sm danger" data-act="del-dlg" data-id="'+d.id+'">Xoá</button></div><div class="bubs '+(S.dlg.py?'':'hide-py ')+(S.dlg.vi?'':'hide-vi')+'">'+d.lines.map(l=>'<button class="bub'+(l.speaker===first?'':' r')+'" data-act="speak-text" data-t="'+esc(l.hanzi)+'"><span class="sp">'+esc(l.speaker)+'</span><span class="hz">'+esc(l.hanzi)+'</span><span class="py">'+esc(l.pinyin)+'</span><span class="vi">'+esc(l.vi)+'</span></button>').join('')+'</div></section>';
+  }).join('');
+}
+function parseDialog(txt){
+  const out=[];let alt=0;
+  txt.split(/\r?\n/).map(l=>l.trim()).filter(Boolean).forEach(l=>{
+    const p=l.split('|').map(x=>x.trim());
+    if(p.length>=4)out.push({speaker:p[0]||'A',hanzi:p[1],pinyin:p[2],vi:p[3]});
+    else if(p.length===3){out.push({speaker:alt%2?'B':'A',hanzi:p[0],pinyin:p[1],vi:p[2]});alt++;}
+  });
+  return out.filter(x=>x.hanzi);
+}
+function dlgModal(id){
+  const d=id?db.dialogs.find(x=>x.id===id):null;
+  const txt=d?d.lines.map(l=>[l.speaker,l.hanzi,l.pinyin,l.vi].join(' | ')).join('\n'):'';
+  modal(d?'Sửa hội thoại':'Thêm hội thoại','<label class="f">Tên đoạn hội thoại<input name="title" value="'+esc(d?d.title:'')+'" placeholder="Ví dụ: Mua trà sữa"></label><p class="hint">Mỗi dòng là một câu thoại:<br><b>Người nói | Chữ Hán | Pinyin | Nghĩa</b></p><label class="f">Nội dung<textarea name="txt" rows="9" placeholder="A | 你好！ | Nǐ hǎo! | Xin chào!&#10;B | 你好！ | Nǐ hǎo! | Xin chào!">'+esc(txt)+'</textarea></label>','Lưu',m=>{
+    const title=$('[name="title"]',m).value.trim(),lines=parseDialog($('[name="txt"]',m).value);
+    if(!title||!lines.length){toast('Cần có tên và ít nhất một câu thoại đúng định dạng.');return false;}
+    if(d){d.title=title;d.lines=lines;}else db.dialogs.push({id:uid(),lessonId:S.lessonId,title,lines});
+    save();render();toast('Đã lưu hội thoại.');
+  });
+}
+function playDialog(id){
+  const d=db.dialogs.find(x=>x.id===id);if(!d)return;
+  const tok=++S.playTok;let i=0;
+  const next=()=>{if(tok!==S.playTok||i>=d.lines.length)return;speak(d.lines[i++].hanzi,()=>setTimeout(next,350));};
+  next();
+}
+
+/* ---------- recording ---------- */
+const MAXS=8;
+const R={stream:null,mr:null,chunks:[],raf:0,timer:0,ac:null,sr:null,cancelled:false};
+function recCancel(){
+  R.cancelled=true;clearInterval(R.timer);cancelAnimationFrame(R.raf);
+  try{if(R.sr)R.sr.abort();}catch(e){}
+  R.sr=null;
+  const mr=R.mr;R.mr=null;
+  try{if(mr&&mr.state!=='inactive')mr.stop();}catch(e){}
+  if(R.stream){R.stream.getTracks().forEach(t=>t.stop());R.stream=null;}
+  try{if(R.ac)R.ac.close();}catch(e){}
+  R.ac=null;
+  if(S.rec&&S.rec.url){URL.revokeObjectURL(S.rec.url);S.rec.url=null;}
+}
+function recStop(){
+  clearInterval(R.timer);
+  try{if(R.mr&&R.mr.state==='recording')R.mr.stop();}catch(e){}
+  try{if(R.sr)R.sr.stop();}catch(e){}
+}
+async function recStart(){
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||!window.MediaRecorder){toast('Trình duyệt này chưa hỗ trợ ghi âm.');return false;}
+  try{R.stream=await navigator.mediaDevices.getUserMedia({audio:true});}
+  catch(e){toast('Không mở được micro. Hãy cho phép micro cho trang này. Nếu đang xem trong khung xem trước, hãy mở trang ở tab riêng.');return false;}
+  R.cancelled=false;R.chunks=[];
+  const mr=new MediaRecorder(R.stream);R.mr=mr;
+  mr.ondataavailable=e=>{if(e.data&&e.data.size)R.chunks.push(e.data);};
+  mr.onstop=()=>{
+    if(R.mr!==mr||R.cancelled)return;
+    cancelAnimationFrame(R.raf);
+    if(R.stream){R.stream.getTracks().forEach(t=>t.stop());R.stream=null;}
+    try{if(R.ac)R.ac.close();}catch(e){}R.ac=null;
+    const blob=new Blob(R.chunks,{type:mr.mimeType||'audio/webm'});
+    if(S.rec.url)URL.revokeObjectURL(S.rec.url);
+    S.rec.url=URL.createObjectURL(blob);S.rec.phase='recorded';render();
+  };
+  S.rec.heard=[];S.rec.srDone=false;
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  S.rec.sr=SR?'on':'none';
+  if(S.rec.mode==='solo'&&SR){
+    try{
+      const sr=new SR();R.sr=sr;sr.lang='zh-CN';sr.interimResults=false;sr.maxAlternatives=3;
+      sr.onresult=e=>{S.rec.heard=Array.from(e.results[0]).map(a=>a.transcript);};
+      sr.onend=()=>{S.rec.srDone=true;if(S.route==='lesson'&&S.tab==='record'&&S.rec.phase==='recorded')render();};
+      sr.onerror=()=>{S.rec.srDone=true;};
+      sr.start();
+    }catch(e){R.sr=null;}
+  }
+  mr.start();
+  return true;
+}
+function startTimer(){
+  const t0=Date.now();
+  R.timer=setInterval(()=>{
+    const el=Date.now()-t0,o=$('#rec-time');
+    if(o)o.textContent=(el/1000).toFixed(1)+' / '+MAXS+' giây';
+    if(el>=MAXS*1000)recStop();
+  },100);
+}
+function startMeter(){
+  const cv=$('#meter');if(!cv||!R.stream)return;
+  try{
+    const AC=window.AudioContext||window.webkitAudioContext;R.ac=new AC();
+    const src=R.ac.createMediaStreamSource(R.stream),an=R.ac.createAnalyser();an.fftSize=64;src.connect(an);
+    const data=new Uint8Array(an.frequencyBinCount),g=cv.getContext('2d');
+    const col=getComputedStyle(document.documentElement).getPropertyValue('--seal').trim()||'#C23B2E';
+    const draw=()=>{
+      if(!$('#meter'))return;
+      an.getByteFrequencyData(data);
+      const W=cv.width,H=cv.height,n=data.length,bw=W/n;
+      g.clearRect(0,0,W,H);g.fillStyle=col;
+      for(let i=0;i<n;i++){const h=Math.max(4,data[i]/255*H);g.fillRect(i*bw+2,(H-h)/2,bw-4,h);}
+      R.raf=requestAnimationFrame(draw);
+    };
+    draw();
+  }catch(e){}
+}
+async function beginRecording(){
+  const ok=await recStart();
+  if(!ok)return;
+  S.rec.phase='recording';render();startTimer();startMeter();
+}
+function playRec(){
+  if(!S.rec.url)return;
+  const a=new Audio(S.rec.url);a.play().catch(()=>toast('Không phát được bản ghi âm.'));
+}
+function srVerdict(w){
+  const r=S.rec;
+  if(r.sr==='none')return {cls:'',text:'Trình duyệt này chưa hỗ trợ nhận dạng giọng nói. Hãy nghe lại bản ghi và so với giọng chuẩn.'};
+  if(!r.heard.length)return r.srDone?{cls:'bad',text:'Máy chưa nhận ra giọng nói. Hãy đọc to và rõ hơn rồi thử lại.'}:{cls:'',text:'Đang nhận dạng giọng nói…'};
+  const n=s=>s.replace(/[\s，。！？、,.!?]/g,'');
+  const hit=r.heard.some(h=>n(h).includes(n(w.hanzi)));
+  return hit?{cls:'ok',text:'Máy nhận ra: “'+r.heard[0]+'”. Khớp với từ cần học.'}:{cls:'bad',text:'Máy nghe được: “'+r.heard[0]+'”. Chưa khớp với “'+w.hanzi+'”. Chú ý thanh điệu và thử lại.'};
+}
+function tabRecord(){
+  const r=S.rec,ws=pool();
+  if(ws.length<2)return '<div class="empty">Cần ít nhất 2 từ trong bài để chơi trò đoán giọng.</div>';
+  const w=byId(r.wordId);
+  const wordCard=w?'<div class="center"><div class="hzbox" style="margin:0 auto 8px"><span class="hz" style="font-size:'+hzSize(w.hanzi)+'px">'+esc(w.hanzi)+'</span></div><div class="py lg">'+esc(w.pinyin)+'</div><div class="vi lg">'+esc(w.vi)+'</div></div>':'';
+  if(r.phase==='pick'){
+    return '<div class="card"><h2>Ghi âm đoán từ</h2><p class="muted">Ghi giọng đọc của bạn, rồi để người khác nghe và đoán xem đó là từ nào. Hoặc tự luyện phát âm một mình.</p><div class="choices"><label class="choice"><input type="radio" name="rmode" value="duo"'+(r.mode==='duo'?' checked':'')+'><b>Hai người, một thiết bị</b><small>Một người ghi âm, người kia nghe và đoán</small></label><label class="choice"><input type="radio" name="rmode" value="solo"'+(r.mode==='solo'?' checked':'')+'><b>Tự luyện</b><small>Ghi âm, nghe lại và so với giọng chuẩn</small></label></div><label class="f">Từ cần đọc<select id="rec-word"><option value="rand">Ngẫu nhiên</option>'+ws.map(x=>'<option value="'+x.id+'">'+esc(x.hanzi)+'  '+esc(x.pinyin)+'</option>').join('')+'</select></label><button class="btn pri" data-act="rec-start">'+MIC+' Bắt đầu ghi âm</button><p class="note">Trang chỉ ghi âm khi bạn bấm nút và sẽ xin quyền dùng micro. Bản ghi chỉ nằm trong trình duyệt của bạn và mất khi bạn tải lại trang. Gửi bản ghi cho người ở thiết bị khác bằng link cần có máy chủ, chưa có trong bản này.</p>'+scoreLine()+'</div>';
+  }
+  if(r.phase==='recording'){
+    return '<div class="card center">'+wordCard+'<canvas id="meter" width="360" height="64" aria-label="Mức âm thanh"></canvas><p class="rtime" id="rec-time">0.0 / '+MAXS+' giây</p><button class="bigbtn" data-act="rec-stop" aria-label="Dừng ghi âm">'+STOP+'</button><p class="hint" style="margin-top:8px">Đang ghi âm. Hãy đọc từ trên màn hình.</p></div>';
+  }
+  if(r.phase==='recorded'){
+    if(r.mode==='duo'){
+      return '<div class="card center">'+wordCard+'<p class="muted" style="margin-top:12px">Đã ghi xong. Nghe lại để chắc là rõ.</p><div class="row" style="justify-content:center"><button class="btn" data-act="rec-play">'+PLAY+' Nghe bản ghi</button><button class="btn" data-act="rec-again">Ghi lại</button><button class="btn pri" data-act="rec-pass">Đưa cho người đoán</button></div><p class="hint" style="margin-top:10px">Khi bấm “Đưa cho người đoán”, từ cần đoán sẽ được ẩn đi.</p></div>';
+    }
+    const v=srVerdict(w);
+    return '<div class="card center">'+wordCard+'<div class="fb '+v.cls+'" style="text-align:left;margin-top:12px">'+esc(v.text)+'</div><div class="row" style="justify-content:center"><button class="btn" data-act="speak" data-id="'+w.id+'">'+SPK+' Giọng chuẩn</button><button class="btn" data-act="rec-play">'+PLAY+' Bản ghi của bạn</button><button class="btn" data-act="rec-again">Ghi lại</button><button class="btn pri" data-act="rec-reset">Từ khác</button></div></div>';
+  }
+  if(r.phase==='guess'){
+    return '<div class="card center"><h2>Lượt đoán</h2><p class="muted">Người đoán cầm máy. Bấm nghe, rồi chọn từ bạn nghe được.</p><button class="bigbtn play" data-act="rec-play" aria-label="Nghe bản ghi">'+PLAY+'</button><div class="opts">'+r.opts.map((o,i)=>'<button class="opt" data-act="rec-pick" data-i="'+i+'"><span class="hz">'+esc(o.hanzi)+'</span><small>'+esc(o.pinyin)+'</small></button>').join('')+'</div></div>';
+  }
+  const ok=r.pick!=null&&r.opts[r.pick].id===r.wordId;
+  return '<div class="card center"><div class="fb '+(ok?'ok':'bad')+'" style="text-align:left"><b>'+(ok?'Đoán đúng!':'Chưa đúng.')+'</b> '+(ok?'Giọng đọc đủ rõ để người nghe nhận ra.':'Từ đúng là từ bên dưới. Thử so thanh điệu giữa bản ghi và giọng chuẩn.')+'</div>'+wordCard+'<div class="row" style="justify-content:center;margin-top:12px"><button class="btn" data-act="speak" data-id="'+w.id+'">'+SPK+' Giọng chuẩn</button><button class="btn" data-act="rec-play">'+PLAY+' Bản ghi</button><button class="btn pri" data-act="rec-reset">Lượt mới, đổi vai</button></div>'+scoreLine()+'</div>';
+}
+function scoreLine(){const s=S.recScore;return s.total?'<p class="hint" style="margin-top:12px">Điểm phiên này: đoán đúng '+s.right+'/'+s.total+' lượt.</p>':'';}
+
+/* ---------- stats ---------- */
+function viewStats(){
+  const ws=db.words,k=ws.filter(w=>w.known).length;
+  const tests=db.history.filter(h=>h.kind==='Ôn tập'&&h.total),guess=db.history.filter(h=>h.kind==='Đoán giọng');
+  const avg=tests.length?Math.round(tests.reduce((a,h)=>a+h.correct*100/h.total,0)/tests.length):0;
+  const gt=guess.reduce((a,h)=>a+h.total,0),gc=guess.reduce((a,h)=>a+h.correct,0);
+  const hard=ws.filter(w=>w.w>0).sort((a,b)=>b.w-a.w).slice(0,6);
+  const last=tests.slice(-10);
+  const bars=last.length?'<div class="bars" role="img" aria-label="Điểm 10 bài ôn tập gần nhất">'+last.map(h=>{const p=Math.round(h.correct*100/h.total);return '<div class="bar" title="'+p+'%"><i style="--h:'+p+'%">'+p+'</i></div>';}).join('')+'</div>':'<div class="empty">Chưa có bài ôn tập nào. Làm một bài ở tab Ôn tập để thấy biểu đồ.</div>';
+  const rows=db.history.slice(-12).reverse().map(h=>'<tr><td>'+esc(new Date(h.t).toLocaleString('vi-VN'))+'</td><td>'+esc(h.kind)+'</td><td>'+esc(h.scope)+'</td><td>'+h.correct+'/'+h.total+'</td></tr>').join('');
+  return '<h1>Thống kê</h1><div class="stats"><div class="stat"><b>'+ws.length+'</b><span>từ đang có</span></div><div class="stat"><b>'+k+'</b><span>từ đã thuộc</span></div><div class="stat"><b>'+tests.length+'</b><span>bài ôn tập đã làm</span></div><div class="stat"><b>'+(tests.length?avg+'%':'–')+'</b><span>điểm trung bình</span></div><div class="stat"><b>'+(gt?gc+'/'+gt:'–')+'</b><span>lượt đoán giọng đúng</span></div></div><h3 class="section" style="margin-top:0">Điểm 10 bài gần nhất (%)</h3><div class="card">'+bars+'</div><h3 class="section">Từ hay sai nhất</h3>'+(hard.length?hard.map(w=>'<div class="wrow" style="grid-template-columns:36px 110px 1fr auto"><button class="iconbtn" data-act="speak" data-id="'+w.id+'" aria-label="Nghe">'+SPK+'</button><div class="hz big">'+esc(w.hanzi)+'</div><div><div class="py">'+esc(w.pinyin)+'</div><div>'+esc(w.vi)+'</div></div><span class="badge">Sai '+w.w+' lần</span></div>').join(''):'<div class="empty">Chưa có từ nào bị sai.</div>')+'<h3 class="section">Lịch sử gần đây</h3>'+(rows?'<div class="card scroll-x"><table class="hist"><thead><tr><th>Thời gian</th><th>Dạng</th><th>Phạm vi</th><th>Kết quả</th></tr></thead><tbody>'+rows+'</tbody></table></div>':'<div class="empty">Chưa có lịch sử.</div>');
+}
+
+/* ---------- backup ---------- */
+function openBackup(){
+  const m=modal('Sao lưu dữ liệu','<p class="hint">Dữ liệu được lưu trong trình duyệt này. Sao chép đoạn văn bản bên dưới và cất đi để dùng trên máy khác, hoặc dán vào đây để khôi phục.</p><label class="f">Dữ liệu<textarea id="bk" rows="8" spellcheck="false">'+esc(JSON.stringify(db))+'</textarea></label><div class="row"><button class="btn" data-act="bk-copy">Sao chép</button><button class="btn" data-act="bk-import">Dùng dữ liệu trong ô</button><button class="btn danger" data-act="bk-reset">Khôi phục dữ liệu mẫu</button></div>',null,null,'Đóng');
+  return m;
+}
+function copyText(t){
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(()=>toast('Đã sao chép.'),()=>fallbackCopy());}else fallbackCopy();
+  function fallbackCopy(){const ta=$('#bk');if(!ta)return;ta.select();let ok=false;try{ok=document.execCommand('copy');}catch(e){}toast(ok?'Đã sao chép.':'Hãy bôi đen và sao chép thủ công.');}
+}
+
+/* ---------- theme ---------- */
+function applyTheme(t){if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);else document.documentElement.removeAttribute('data-theme');}
+applyTheme(lsGet(TKEY));
+function toggleTheme(){
+  const cur=document.documentElement.getAttribute('data-theme')||(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+  const nx=cur==='dark'?'light':'dark';applyTheme(nx);lsSet(TKEY,nx);
+}
+
+/* ---------- actions ---------- */
+function act(a,el){
+  const id=el.dataset.id;
+  switch(a){
+    case 'theme':toggleTheme();break;
+    case 'backup':openBackup();break;
+    case 'speak':{const w=byId(id);if(w)speak(w.hanzi);break;}
+    case 'speak-text':speak(el.dataset.t);break;
+    case 'daily':S.daily=null;render();break;
+    case 'new-lesson':lessonModal();break;
+    case 'rename-lesson':lessonModal(id);break;
+    case 'del-lesson':ask('Xoá bài “'+esc(lessonName(id))+'” cùng toàn bộ từ và hội thoại trong bài?','Xoá bài',()=>{db.lessons=db.lessons.filter(l=>l.id!==id);db.words=db.words.filter(w=>w.lessonId!==id);db.dialogs=db.dialogs.filter(d=>d.lessonId!==id);S.daily=null;save();render();});break;
+    case 'tab':recCancel();try{window.speechSynthesis&&window.speechSynthesis.cancel();}catch(e){}S.playTok++;S.fc=null;S.rv=null;S.rec=newRec();S.tab=el.dataset.t;render();break;
+    case 'add-word':wordModal();break;
+    case 'edit-word':wordModal(id);break;
+    case 'del-word':{const w=byId(id);if(w)ask('Xoá từ “'+esc(w.hanzi)+'”?','Xoá từ',()=>{db.words=db.words.filter(x=>x.id!==id);save();render();});break;}
+    case 'bulk':bulkModal();break;
+    case 'fc-start':startFlash(el.dataset.only==='1');render();break;
+    case 'fc-flip':S.fc.flip=!S.fc.flip;render();break;
+    case 'fc-know':case 'fc-dont':{
+      const f=S.fc,w=byId(f.deck[f.i]);
+      if(a==='fc-know'){w.known=true;f.known++;}else{w.known=false;f.again.push(w.id);}
+      save();f.i++;f.flip=false;render();break;
+    }
+    case 'fc-again':startFlash(false,S.fc.again.slice());render();break;
+    case 'fc-exit':S.fc=null;render();break;
+    case 'rv-start':rvStart();render();break;
+    case 'rv-pick':{const r=S.rv,q=r.qs[r.i];if(q.ok!==null)break;q.pick=+el.dataset.i;rvAnswer(q.opts[q.pick].id===q.w.id);render();break;}
+    case 'rv-skip':rvAnswer(false);render();break;
+    case 'rv-submit':{
+      const r=S.rv,q=r.qs[r.i];if(q.ok!==null)break;
+      const val=$('#ans').value;if(!val.trim()){toast('Hãy gõ đáp án hoặc bấm Bỏ qua.');break;}
+      const c=checkTyped(val,q.w);rvAnswer(c.ok,c.note);render();break;
+    }
+    case 'rv-next':{const r=S.rv;r.i++;if(r.i>=r.qs.length)rvFinish();render();break;}
+    case 'rv-reset':S.rv=null;render();break;
+    case 'rv-redo':{const ids=S.rv.results.filter(x=>!x.ok).map(x=>x.id);S.rv=null;rvStart(ids);render();break;}
+    case 'rv-flash':{const ids=S.rv.results.filter(x=>!x.ok).map(x=>x.id);S.rv=null;S.tab='vocab';startFlash(false,ids);render();break;}
+    case 'mt-l':{const c=S.rv.cur;if(c.done[id])break;c.sel=c.sel===id?null:id;render();break;}
+    case 'mt-r':{
+      const r=S.rv,c=r.cur;if(c.done[id]||!c.sel)break;
+      const sel=c.sel;
+      if(sel===id){c.done[id]=true;const bad=!!c.wrong[id];const w=byId(id);mark(w,!bad);r.results.push({id,ok:!bad});c.sel=null;render();}
+      else{c.wrong[sel]=true;c.bad={l:sel,r:id};c.sel=null;render();const cur=c;setTimeout(()=>{if(S.rv&&S.rv.cur===cur){cur.bad=null;render();}},600);}
+      break;
+    }
+    case 'mt-next':{const r=S.rv;r.r++;if(r.r*5>=r.words.length)rvFinish();else matchRound();render();break;}
+    case 'dlg-py':S.dlg.py=el.checked;render();break;
+    case 'dlg-vi':S.dlg.vi=el.checked;render();break;
+    case 'add-dlg':dlgModal();break;
+    case 'edit-dlg':dlgModal(id);break;
+    case 'del-dlg':ask('Xoá đoạn hội thoại này?','Xoá',()=>{db.dialogs=db.dialogs.filter(d=>d.id!==id);save();render();});break;
+    case 'dlg-play':playDialog(id);break;
+    case 'rec-start':{
+      const mode=($('input[name="rmode"]:checked')||{value:'duo'}).value,sel=$('#rec-word').value;
+      const ws=pool();S.rec.mode=mode;
+      S.rec.wordId=sel==='rand'?ws[Math.floor(Math.random()*ws.length)].id:sel;
+      beginRecording();break;
+    }
+    case 'rec-stop':recStop();break;
+    case 'rec-again':{if(S.rec.url){URL.revokeObjectURL(S.rec.url);S.rec.url=null;}beginRecording();break;}
+    case 'rec-play':playRec();break;
+    case 'rec-pass':{
+      const w=byId(S.rec.wordId);S.rec.opts=makeOpts(w,'mchz');S.rec.pick=null;S.rec.phase='guess';render();break;
+    }
+    case 'rec-pick':{
+      const r=S.rec;r.pick=+el.dataset.i;r.phase='result';
+      const ok=r.opts[r.pick].id===r.wordId;
+      S.recScore.total++;if(ok)S.recScore.right++;
+      db.history.push({t:Date.now(),kind:'Đoán giọng',scope:curLesson().name,total:1,correct:ok?1:0});
+      if(db.history.length>300)db.history=db.history.slice(-300);
+      save();render();break;
+    }
+    case 'rec-reset':{recCancel();S.rec=newRec();render();break;}
+    case 'bk-copy':copyText($('#bk').value);break;
+    case 'bk-import':{
+      let d=null;try{d=norm(JSON.parse($('#bk').value));}catch(e){}
+      if(!d){toast('Dữ liệu không hợp lệ. Hãy dán đúng đoạn văn bản đã sao lưu.');break;}
+      ask('Thay toàn bộ dữ liệu hiện tại bằng dữ liệu đã dán?','Thay dữ liệu',()=>{db=d;S.daily=null;save();const mb=$('.mback');if(mb)mb.remove();render();toast('Đã khôi phục dữ liệu.');});
+      break;
+    }
+    case 'bk-reset':ask('Xoá dữ liệu hiện tại và quay về bộ từ mẫu?','Khôi phục mẫu',()=>{db=sample();S.daily=null;save();$$('.mback').forEach(x=>x.remove());render();toast('Đã quay về dữ liệu mẫu.');});break;
+  }
+}
+document.addEventListener('click',e=>{
+  const el=e.target.closest('[data-act]');
+  if(!el||el.disabled||el.tagName==='INPUT')return;
+  act(el.dataset.act,el);
+});
+document.addEventListener('change',e=>{
+  const el=e.target;
+  if(el.tagName==='INPUT'&&el.dataset.act&&el.type==='checkbox')act(el.dataset.act,el);
+});
+document.addEventListener('submit',e=>{
+  const f=e.target.closest('[data-form]');
+  if(f){e.preventDefault();act(f.dataset.form,f);}
+});
+document.addEventListener('input',e=>{
+  if(e.target.id!=='q-search')return;
+  const v=e.target.value.trim().toLowerCase(),sv=strip(v);
+  $$('#wlist .wrow').forEach(r=>{r.hidden=!!v&&!r.dataset.q.includes(v)&&!r.dataset.q.includes(sv);});
+});
+document.addEventListener('keydown',e=>{
+  if(e.key!==' '||!S.fc||document.querySelector('.mback'))return;
+  const t=e.target.tagName;
+  if(t==='BUTTON'||t==='INPUT'||t==='TEXTAREA'||t==='SELECT'||t==='A')return;
+  e.preventDefault();
+  if(S.fc.i<S.fc.deck.length){S.fc.flip=!S.fc.flip;render();}
+});
+
+/* ---------- router ---------- */
+function route(){
+  const h=location.hash.slice(1);
+  recCancel();S.playTok++;
+  try{if('speechSynthesis' in window)speechSynthesis.cancel();}catch(e){}
+  S.fc=null;S.rv=null;S.rec=newRec();S.tab='vocab';
+  if(h==='stats'){S.route='stats';document.title='Thống kê | Tiếng Trung Cùng Nhau';}
+  else if(h.indexOf('lesson-')===0){
+    const id=h.slice(7);
+    if(id==='all'||db.lessons.some(l=>l.id===id)){S.route='lesson';S.lessonId=id;document.title=curLesson().name+' | Tiếng Trung Cùng Nhau';}
+    else{S.route='home';}
+  }else{S.route='home';document.title='Tiếng Trung Cùng Nhau';}
+  window.scrollTo(0,0);
+  render();
+}
+window.addEventListener('hashchange',route);
+route();
+})();
+</script>
+</body>
+</html>
