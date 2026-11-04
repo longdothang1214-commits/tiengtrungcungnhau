@@ -210,7 +210,7 @@ canvas#meter{width:100%;max-width:360px;height:64px;display:block;margin:10px au
 .gbtn:hover{box-shadow:0 1px 5px rgba(0,0,0,.3)}
 .who{font-size:13px;color:var(--muted);align-self:center;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 6px}
 body.noauth .mainnav a,body.noauth [data-act="backup"],body.noauth #who,body.noauth [data-act="logout"]{display:none}
-body.local #who,body.local [data-act="logout"]{display:none}
+body.local #who,body.local [data-act="logout"],body.local #nav-shared,body.local [data-share]{display:none}
 @media (max-width:760px){.who{display:none}}
 @media (max-width:640px){
   h1{font-size:24px}
@@ -232,6 +232,7 @@ body.local #who,body.local [data-act="logout"]{display:none}
     <a class="brand" href="#home"><span class="seal" aria-hidden="true">学</span><span>Tiếng Trung Cùng Nhau</span></a>
     <nav class="mainnav" aria-label="Điều hướng chính">
       <a href="#home" id="nav-home">Bài học</a>
+      <a href="#shared" id="nav-shared">Bài chung</a>
       <a href="#stats" id="nav-stats">Thống kê</a>
       <button type="button" data-act="backup">Sao lưu</button>
       <button type="button" data-act="theme" aria-label="Đổi giao diện sáng hoặc tối">Sáng/Tối</button>
@@ -428,9 +429,11 @@ function render(){
   const app=$('#app');
   if(S.route==='home')app.innerHTML=viewHome();
   else if(S.route==='stats')app.innerHTML=viewStats();
+  else if(S.route==='shared')app.innerHTML=viewShared();
   else app.innerHTML=viewLesson();
   $('#nav-home').classList.toggle('on',S.route==='home'||S.route==='lesson');
   $('#nav-stats').classList.toggle('on',S.route==='stats');
+  $('#nav-shared').classList.toggle('on',S.route==='shared');
   const af=$('[data-autofocus]');if(af)af.focus();
   if(S.route==='lesson'&&S.tab==='review'&&S.rv&&S.rv.phase==='q'){
     const q=S.rv.qs[S.rv.i];
@@ -447,7 +450,7 @@ function viewHome(){
   const cards=db.lessons.map(l=>{
     const lw=ws.filter(w=>w.lessonId===l.id),k=lw.filter(w=>w.known).length,pct=lw.length?Math.round(k*100/lw.length):0;
     const nd=db.dialogs.filter(d=>d.lessonId===l.id).length;
-    return '<article class="lcard"><h3>'+esc(l.name)+'</h3><div class="muted">'+lw.length+' từ, '+nd+' hội thoại</div><div><div class="prog" role="progressbar" aria-valuenow="'+pct+'" aria-valuemin="0" aria-valuemax="100" aria-label="Tiến độ"><i style="width:'+pct+'%"></i></div><div class="hint">Đã thuộc '+k+'/'+lw.length+'</div></div><div class="acts"><a class="btn pri sm" href="#lesson-'+l.id+'">Mở bài</a><button class="btn txt sm" data-act="rename-lesson" data-id="'+l.id+'">Đổi tên</button><button class="btn txt sm danger" data-act="del-lesson" data-id="'+l.id+'">Xoá</button></div></article>';
+    return '<article class="lcard"><h3>'+esc(l.name)+'</h3><div class="muted">'+lw.length+' từ, '+nd+' hội thoại</div><div><div class="prog" role="progressbar" aria-valuenow="'+pct+'" aria-valuemin="0" aria-valuemax="100" aria-label="Tiến độ"><i style="width:'+pct+'%"></i></div><div class="hint">Đã thuộc '+k+'/'+lw.length+'</div></div><div class="acts" style="flex-wrap:wrap"><a class="btn pri sm" href="#lesson-'+l.id+'">Mở bài</a><button class="btn txt sm" data-act="rename-lesson" data-id="'+l.id+'">Đổi tên</button><button class="btn txt sm danger" data-act="del-lesson" data-id="'+l.id+'">Xoá</button></div><div class="acts" style="flex-wrap:wrap" data-share>'+(l.sharedId?'<span class="badge ok">Đang chia sẻ</span><button class="btn txt sm" data-act="share-lesson" data-id="'+l.id+'">Cập nhật bản chung</button><button class="btn txt sm" data-act="unshare-lesson" data-id="'+l.id+'">Ngừng chia sẻ</button>':'<button class="btn sm" data-act="share-lesson" data-id="'+l.id+'">Chia sẻ cho mọi người</button>')+'</div></article>';
   }).join('');
   const all='<article class="lcard"><h3>Ôn tập tất cả bài</h3><div class="muted">'+ws.length+' từ từ mọi bài</div><div class="acts"><a class="btn sm" href="#lesson-all">Mở</a></div></article>';
   return hero+'<div class="toolbar"><h1 class="grow" style="margin:0">Bài học của bạn</h1><button class="btn pri" data-act="new-lesson">+ Tạo bài mới</button></div><div class="grid">'+cards+all+'</div>';
@@ -820,6 +823,73 @@ function viewStats(){
   return '<h1>Thống kê</h1><div class="stats"><div class="stat"><b>'+ws.length+'</b><span>từ đang có</span></div><div class="stat"><b>'+k+'</b><span>từ đã thuộc</span></div><div class="stat"><b>'+tests.length+'</b><span>bài ôn tập đã làm</span></div><div class="stat"><b>'+(tests.length?avg+'%':'–')+'</b><span>điểm trung bình</span></div><div class="stat"><b>'+(gt?gc+'/'+gt:'–')+'</b><span>lượt đoán giọng đúng</span></div></div><h3 class="section" style="margin-top:0">Điểm 10 bài gần nhất (%)</h3><div class="card">'+bars+'</div><h3 class="section">Từ hay sai nhất</h3>'+(hard.length?hard.map(w=>'<div class="wrow" style="grid-template-columns:36px 110px 1fr auto"><button class="iconbtn" data-act="speak" data-id="'+w.id+'" aria-label="Nghe">'+SPK+'</button><div class="hz big">'+esc(w.hanzi)+'</div><div><div class="py">'+esc(w.pinyin)+'</div><div>'+esc(w.vi)+'</div></div><span class="badge">Sai '+w.w+' lần</span></div>').join(''):'<div class="empty">Chưa có từ nào bị sai.</div>')+'<h3 class="section">Lịch sử gần đây</h3>'+(rows?'<div class="card scroll-x"><table class="hist"><thead><tr><th>Thời gian</th><th>Dạng</th><th>Phạm vi</th><th>Kết quả</th></tr></thead><tbody>'+rows+'</tbody></table></div>':'<div class="empty">Chưa có lịch sử.</div>');
 }
 
+/* ---------- shared lessons ---------- */
+async function loadShared(){
+  const sh=S.sh;render();
+  try{
+    if(sh.detailId){sh.doc=await FB().getShared(sh.detailId);if(!sh.doc)sh.err='Bài này không còn tồn tại.';}
+    else sh.list=await FB().listShared();
+  }catch(e){sh.err='Không tải được dữ liệu. Kiểm tra mạng và Firestore Rules trong Firebase.';}
+  if(S.sh===sh&&S.route==='shared')render();
+}
+function parseShared(d){
+  let j={};try{j=JSON.parse(d.json)||{};}catch(e){}
+  const cut=x=>String(x==null?'':x).slice(0,300);
+  const words=(Array.isArray(j.words)?j.words:[]).slice(0,2000).filter(w=>w&&w.hanzi).map(w=>({hanzi:cut(w.hanzi),pinyin:cut(w.pinyin),vi:cut(w.vi),example:cut(w.example),note:cut(w.note)}));
+  const dialogs=(Array.isArray(j.dialogs)?j.dialogs:[]).slice(0,100).map(x=>({title:cut(x&&x.title),lines:(Array.isArray(x&&x.lines)?x.lines:[]).slice(0,200).map(l=>({speaker:cut((l&&l.speaker)||'A'),hanzi:cut(l&&l.hanzi),pinyin:cut(l&&l.pinyin),vi:cut(l&&l.vi)})).filter(l=>l.hanzi)})).filter(x=>x.lines.length);
+  return {words,dialogs};
+}
+function copyShared(d){
+  const p=parseShared(d),lid=uid();
+  db.lessons.push({id:lid,name:String(d.name||'Bài chung').slice(0,60)});
+  p.words.forEach(w=>db.words.push(Object.assign({id:uid(),lessonId:lid,known:false,c:0,w:0},w)));
+  p.dialogs.forEach(x=>db.dialogs.push({id:uid(),lessonId:lid,title:x.title||'Hội thoại',lines:x.lines}));
+  save();toast('Đã thêm “'+d.name+'” vào bài của bạn.');location.hash='#lesson-'+lid;
+}
+function shareLesson(id){
+  const l=db.lessons.find(x=>x.id===id);if(!l||!user||!FB())return;
+  const ws=db.words.filter(w=>w.lessonId===id),ds=db.dialogs.filter(d=>d.lessonId===id);
+  if(!ws.length&&!ds.length){toast('Bài này chưa có nội dung để chia sẻ.');return;}
+  const name=user.displayName||'Một bạn học';
+  const go=async()=>{
+    const sid=l.sharedId||FB().newSharedId();
+    const payload={ownerUid:user.uid,ownerName:name,name:l.name,wordCount:ws.length,dialogCount:ds.length,
+      json:JSON.stringify({words:ws.map(w=>({hanzi:w.hanzi,pinyin:w.pinyin,vi:w.vi,example:w.example,note:w.note})),dialogs:ds.map(d=>({title:d.title,lines:d.lines}))}),updatedAt:Date.now()};
+    try{await FB().saveShared(sid,payload);l.sharedId=sid;save();render();toast('Đã chia sẻ bài “'+l.name+'”.');}
+    catch(e){toast('Không chia sẻ được. Kiểm tra mạng và Firestore Rules trong Firebase.');}
+  };
+  if(l.sharedId){go();return;}
+  ask('Chia sẻ bài “'+esc(l.name)+'” cho mọi người đã đăng nhập? Tên Google của bạn ('+esc(name)+') sẽ hiện kèm bài. Chỉ chia sẻ từ vựng và hội thoại, không chia sẻ điểm số.','Chia sẻ',go);
+}
+function unshareById(sid,after){
+  ask('Ngừng chia sẻ bài này? Mọi người sẽ không thấy bài nữa. Bài trong tài khoản của bạn vẫn còn.','Ngừng chia sẻ',async()=>{
+    try{await FB().delShared(sid);db.lessons.forEach(l=>{if(l.sharedId===sid)delete l.sharedId;});save();toast('Đã ngừng chia sẻ.');if(after)after();}
+    catch(e){toast('Không thực hiện được. Kiểm tra mạng rồi thử lại.');}
+  });
+}
+function viewShared(){
+  const sh=S.sh||{};
+  if(sh.detailId)return viewSharedDetail();
+  let body;
+  if(sh.err)body='<div class="fb bad">'+esc(sh.err)+'</div>';
+  else if(!sh.list)body='<div class="empty">Đang tải…</div>';
+  else if(!sh.list.length)body='<div class="empty">Chưa có ai chia sẻ bài nào. Vào Bài học và bấm “Chia sẻ cho mọi người” ở một bài của bạn để là người đầu tiên.</div>';
+  else body='<div class="grid">'+sh.list.map(d=>{
+    const mine=user&&d.ownerUid===user.uid;
+    return '<article class="lcard"><h3>'+esc(d.name)+'</h3><div class="muted">'+(+d.wordCount||0)+' từ, '+(+d.dialogCount||0)+' hội thoại</div><div class="hint">Chia sẻ bởi '+esc(d.ownerName||'Một bạn học')+(mine?' (bạn)':'')+'<br>Cập nhật '+esc(new Date(d.updatedAt||0).toLocaleDateString('vi-VN'))+'</div><div class="acts" style="flex-wrap:wrap"><a class="btn pri sm" href="#shared-'+esc(d.id)+'">Xem</a><button class="btn sm" data-act="sh-copy" data-id="'+esc(d.id)+'">Thêm vào bài của tôi</button>'+(mine?'<button class="btn txt sm danger" data-act="sh-unshare" data-id="'+esc(d.id)+'">Ngừng chia sẻ</button>':'')+'</div></article>';
+  }).join('')+'</div>';
+  return '<h1>Bài học chung</h1><p class="muted">Bài do các bạn học chia sẻ. Bạn có thể xem, nghe và thêm bản sao vào bài của mình để học với tiến độ riêng.</p>'+body;
+}
+function viewSharedDetail(){
+  const sh=S.sh,back='<a class="back" href="#shared">← Bài học chung</a>';
+  if(sh.err)return back+'<div class="fb bad">'+esc(sh.err)+'</div>';
+  if(!sh.doc)return back+'<div class="empty">Đang tải…</div>';
+  const d=sh.doc,p=parseShared(d);
+  const words=p.words.map(w=>'<div class="wrow" style="grid-template-columns:36px 110px 1fr"><button class="iconbtn" data-act="speak-text" data-t="'+esc(w.hanzi)+'" aria-label="Nghe">'+SPK+'</button><div class="hz big">'+esc(w.hanzi)+'</div><div><div class="py">'+esc(w.pinyin)+'</div><div>'+esc(w.vi)+'</div>'+(w.example?'<div class="ex">'+esc(w.example)+'</div>':'')+'</div></div>').join('');
+  const dl=p.dialogs.map(x=>{const first=x.lines[0].speaker;return '<section class="card" style="margin-bottom:14px"><h2>'+esc(x.title)+'</h2><div class="bubs">'+x.lines.map(l=>'<button class="bub'+(l.speaker===first?'':' r')+'" data-act="speak-text" data-t="'+esc(l.hanzi)+'"><span class="sp">'+esc(l.speaker)+'</span><span class="hz">'+esc(l.hanzi)+'</span><span class="py">'+esc(l.pinyin)+'</span><span class="vi">'+esc(l.vi)+'</span></button>').join('')+'</div></section>';}).join('');
+  return back+'<h1>'+esc(d.name)+'</h1><p class="muted">Chia sẻ bởi '+esc(d.ownerName||'Một bạn học')+'</p><div class="toolbar"><button class="btn pri" data-act="sh-copy" data-id="'+esc(d.id)+'">Thêm vào bài của tôi</button></div>'+(words?'<h3 class="section" style="margin-top:0">Từ vựng ('+p.words.length+')</h3>'+words:'')+(dl?'<h3 class="section">Hội thoại</h3>'+dl:'');
+}
+
 /* ---------- backup ---------- */
 function openBackup(){
   const m=modal('Sao lưu dữ liệu','<p class="hint">Dữ liệu được lưu trong trình duyệt này. Sao chép đoạn văn bản bên dưới và cất đi để dùng trên máy khác, hoặc dán vào đây để khôi phục.</p><label class="f">Dữ liệu<textarea id="bk" rows="8" spellcheck="false">'+esc(JSON.stringify(db))+'</textarea></label><div class="row"><button class="btn" data-act="bk-copy">Sao chép</button><button class="btn" data-act="bk-import">Dùng dữ liệu trong ô</button><button class="btn danger" data-act="bk-reset">Khôi phục dữ liệu mẫu</button></div>',null,null,'Đóng');
@@ -842,6 +912,10 @@ function toggleTheme(){
 function act(a,el){
   const id=el.dataset.id;
   switch(a){
+    case 'share-lesson':shareLesson(id);break;
+    case 'unshare-lesson':{const l=db.lessons.find(x=>x.id===id);if(l&&l.sharedId)unshareById(l.sharedId,render);break;}
+    case 'sh-copy':{const sh=S.sh||{};const d=(sh.doc&&sh.doc.id===id)?sh.doc:(sh.list||[]).find(x=>x.id===id);if(d)copyShared(d);break;}
+    case 'sh-unshare':unshareById(id,()=>{if(S.sh&&S.sh.list)S.sh.list=S.sh.list.filter(x=>x.id!==id);render();});break;
     case 'login':doLogin();break;
     case 'logout':doLogout();break;
     case 'reload':location.reload();break;
@@ -959,6 +1033,7 @@ function route(){
   try{if('speechSynthesis' in window)speechSynthesis.cancel();}catch(e){}
   S.fc=null;S.rv=null;S.rec=newRec();S.tab='vocab';
   if(h==='stats'){S.route='stats';document.title='Thống kê | Tiếng Trung Cùng Nhau';}
+  else if(h==='shared'||h.indexOf('shared-')===0){S.route='shared';S.sh={list:null,err:null,doc:null,detailId:h.slice(7)||null};document.title='Bài chung | Tiếng Trung Cùng Nhau';loadShared();}
   else if(h.indexOf('lesson-')===0){
     const id=h.slice(7);
     if(id==='all'||db.lessons.some(l=>l.id===id)){S.route='lesson';S.lessonId=id;document.title=curLesson().name+' | Tiếng Trung Cùng Nhau';}
@@ -987,7 +1062,12 @@ if(!configured())start();else window.addEventListener('fb-ready',start,{once:tru
         signInRedirect:()=>Au.signInWithRedirect(auth,prov),
         signOut:()=>Au.signOut(auth),
         loadUser:async uid=>{const s=await Fs.getDoc(Fs.doc(store,'users',uid));return s.exists()?s.data().data:null;},
-        saveUser:(uid,json)=>Fs.setDoc(Fs.doc(store,'users',uid),{data:json,updatedAt:Date.now()})
+        saveUser:(uid,json)=>Fs.setDoc(Fs.doc(store,'users',uid),{data:json,updatedAt:Date.now()}),
+        listShared:async()=>{const q=Fs.query(Fs.collection(store,'shared'),Fs.orderBy('updatedAt','desc'),Fs.limit(100));const r=await Fs.getDocs(q);return r.docs.map(d=>Object.assign({id:d.id},d.data()));},
+        getShared:async id=>{const r=await Fs.getDoc(Fs.doc(store,'shared',id));return r.exists()?Object.assign({id:r.id},r.data()):null;},
+        newSharedId:()=>Fs.doc(Fs.collection(store,'shared')).id,
+        saveShared:(id,data)=>Fs.setDoc(Fs.doc(store,'shared',id),data),
+        delShared:id=>Fs.deleteDoc(Fs.doc(store,'shared',id))
       };
     }catch(e){console.error(e);}
   }
