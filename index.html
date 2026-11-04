@@ -206,6 +206,10 @@ canvas#meter{width:100%;max-width:360px;height:64px;display:block;margin:10px au
 .codebox{font:700 36px/1.2 var(--hz);letter-spacing:.25em;margin:6px 0 10px;padding-left:.25em}
 .plist{list-style:none;margin:10px 0;padding:0;text-align:left;font-size:15px}
 .plist li{padding:5px 0;border-bottom:1px solid var(--line)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:6px 14px;cursor:pointer;font-weight:500}
+.chip:hover{background:var(--surface2)}
+.chip[aria-pressed="true"]{background:var(--pri);color:var(--pri-ink);border-color:var(--pri)}
 /* login */
 .login{max-width:440px;margin:40px auto;padding:32px 24px}
 .seal.big{width:56px;height:56px;font-size:34px;margin:0 auto 14px;border-radius:10px}
@@ -905,6 +909,7 @@ const myName=()=>(user&&user.displayName)||'Bạn học';
 function unwatchAll(){
   (S.unsubs||[]).forEach(f=>{try{f();}catch(e){}});S.unsubs=[];
   if(S.rm&&S.rm.t)clearTimeout(S.rm.t);
+  vcCancel();
 }
 function randCode(){const a='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let c='';for(let i=0;i<6;i++)c+=a[Math.floor(Math.random()*a.length)];return c;}
 function noGroups(){return !GA();}
@@ -977,14 +982,42 @@ function viewGroup(){
   if(gp.err)return back+'<div class="fb bad">'+esc(gp.err)+'</div>';
   if(!gp.group)return back+'<div class="empty">Đang tải…</div>';
   const g=gp.group,ws=gp.words||[];
-  const tabs=[['words','Từ chung ('+ws.length+')'],['rooms','Ôn cùng nhau'],['members','Thành viên']];
+  const tabs=[['words','Từ chung ('+ws.length+')'],['rooms','Ôn cùng nhau'],['voice','Ghi âm đoán từ'],['members','Thành viên']];
   const head=back+'<h1>'+esc(g.name)+'</h1><div class="tabs" role="tablist">'+tabs.map(t=>'<button type="button" role="tab" aria-selected="'+(gp.tab===t[0])+'" data-act="gp-tab" data-t="'+t[0]+'">'+esc(t[1])+'</button>').join('')+'</div>';
-  return head+(gp.tab==='words'?gpWords(ws):gp.tab==='rooms'?gpRooms(g,ws):gpMembers(g,ws));
+  return head+(gp.tab==='words'?gpWords(ws):gp.tab==='rooms'?gpRooms(g,ws):gp.tab==='voice'?gpVoice(ws):gpMembers(g,ws));
+}
+function todayStr(){const d=new Date(),p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
+function fmtDay(v){
+  if(!v||v==='none')return 'Chưa phân ngày';
+  const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(v);if(!m)return v;
+  const wd=['Chủ nhật','Thứ hai','Thứ ba','Thứ tư','Thứ năm','Thứ sáu','Thứ bảy'][new Date(+m[1],+m[2]-1,+m[3]).getDay()];
+  return wd+', '+m[3]+'/'+m[2]+'/'+m[1];
+}
+function shortDay(v){
+  if(!v||v==='none')return 'Chưa phân ngày';
+  if(v===todayStr())return 'Hôm nay';
+  const m=/^\d{4}-(\d{2})-(\d{2})$/.exec(v);return m?m[2]+'/'+m[1]:v;
+}
+function wordKey(w){return w.day||'none';}
+function gpWordRow(w){
+  return '<div class="wrow"><button class="iconbtn" data-act="speak-text" data-t="'+esc(w.hanzi)+'" aria-label="Nghe '+esc(w.hanzi)+'">'+SPK+'</button><div class="hz big">'+esc(w.hanzi)+'</div><div class="wmain"><div class="py">'+esc(w.pinyin)+'</div><div>'+esc(w.vi)+'</div>'+(w.example?'<div class="ex">'+esc(w.example)+'</div>':'')+'</div><span class="badge">Thêm bởi '+esc(w.addedByName||'bạn học')+'</span><div class="wacts"><button class="btn txt sm" data-act="gp-edit" data-id="'+esc(w.id)+'">Sửa</button><button class="btn txt sm danger" data-act="gp-del" data-id="'+esc(w.id)+'">Xoá</button></div></div>';
 }
 function gpWords(ws){
-  const bar='<div class="toolbar"><button class="btn pri" data-act="gp-add">+ Thêm từ</button><button class="btn" data-act="gp-bulk">Nhập nhiều từ</button>'+(ws.length?'<button class="btn" data-act="gp-save">Lưu bộ từ về bài của tôi</button>':'')+'</div>';
-  if(!ws.length)return bar+'<div class="empty">Bộ từ chung đang trống. Ai trong nhóm thêm từ thì mọi người đều thấy ngay.</div>';
-  return bar+ws.map(w=>'<div class="wrow"><button class="iconbtn" data-act="speak-text" data-t="'+esc(w.hanzi)+'" aria-label="Nghe '+esc(w.hanzi)+'">'+SPK+'</button><div class="hz big">'+esc(w.hanzi)+'</div><div class="wmain"><div class="py">'+esc(w.pinyin)+'</div><div>'+esc(w.vi)+'</div>'+(w.example?'<div class="ex">'+esc(w.example)+'</div>':'')+'</div><span class="badge">Thêm bởi '+esc(w.addedByName||'bạn học')+'</span><div class="wacts"><button class="btn txt sm" data-act="gp-edit" data-id="'+esc(w.id)+'">Sửa</button><button class="btn txt sm danger" data-act="gp-del" data-id="'+esc(w.id)+'">Xoá</button></div></div>').join('');
+  const gp=S.gp,today=todayStr(),cur=gp.day||'all';
+  const set=new Set(ws.map(wordKey));set.add(today);
+  const days=Array.from(set).filter(d=>d!=='none').sort().reverse();
+  const cnt=d=>ws.filter(w=>wordKey(w)===d).length;
+  const chip=(d,label)=>'<button class="chip" aria-pressed="'+(cur===d)+'" data-act="gp-day" data-d="'+esc(d)+'">'+esc(label)+'</button>';
+  const chips='<div class="chips">'+chip('all','Tất cả ('+ws.length+')')+days.map(d=>chip(d,shortDay(d)+' ('+cnt(d)+')')).join('')+(set.has('none')?chip('none','Chưa phân ngày ('+cnt('none')+')'):'')+'</div>';
+  const bar='<div class="toolbar"><button class="btn pri" data-act="gp-add">+ Thêm từ'+(cur!=='all'&&cur!=='none'?' vào '+esc(shortDay(cur).toLowerCase()):'')+'</button><button class="btn" data-act="gp-bulk">Nhập nhiều từ</button></div>';
+  if(!ws.length)return bar+chips+'<div class="empty">Bộ từ chung đang trống. Ai trong nhóm thêm từ thì mọi người đều thấy ngay, và từ được xếp theo ngày học.</div>';
+  const shown=cur==='all'?days.filter(d=>cnt(d)>0).concat(set.has('none')?['none']:[]):[cur];
+  const secs=shown.map(d=>{
+    const l=ws.filter(w=>wordKey(w)===d);
+    const head='<div class="toolbar" style="margin:18px 0 8px"><h3 class="grow" style="margin:0;font-size:18px">'+esc(fmtDay(d))+' <span class="muted" style="font-size:14px;font-weight:400">('+l.length+' từ)</span></h3>'+(l.length>=2?'<button class="btn sm" data-act="gp-room" data-d="'+esc(d)+'">Tạo phòng ôn ngày này</button>':'')+(l.length?'<button class="btn sm" data-act="gp-save" data-d="'+esc(d)+'">Lưu về bài của tôi</button>':'')+'</div>';
+    return head+(l.length?l.map(gpWordRow).join(''):'<div class="empty">Chưa có từ nào trong ngày này. Bấm “Thêm từ” để thêm.</div>');
+  }).join('');
+  return bar+chips+secs;
 }
 function gpRooms(g,ws){
   const rooms=S.gp.rooms||[];
@@ -1000,48 +1033,56 @@ function gpMembers(g,ws){
   const rows=(g.members||[]).map(u=>'<div class="wrow" style="grid-template-columns:1fr auto"><div><b>'+esc(names[u]||'Bạn học')+'</b>'+(u===g.ownerUid?' <span class="badge">Chủ nhóm</span>':'')+(u===user.uid?' <span class="badge ok">Bạn</span>':'')+'</div><span class="muted">đã thêm '+(cnt[u]||0)+' từ</span></div>').join('');
   return '<div class="card center" style="margin-bottom:16px"><p class="muted">Mã mời bạn bè</p><div class="codebox">'+esc(g.code)+'</div><button class="btn sm" data-act="gp-code-copy">Sao chép mã</button></div>'+rows+'<p style="margin-top:16px"><button class="btn txt danger" data-act="gp-leave">Rời nhóm</button></p>';
 }
+function defaultDay(){const d=S.gp&&S.gp.day;return d&&d!=='all'&&d!=='none'?d:todayStr();}
 function gwordModal(id){
   const gp=S.gp,G=GA(),w=id?(gp.words||[]).find(x=>x.id===id):null,v=k=>esc(w?w[k]:'');
-  modal(w?'Sửa từ chung':'Thêm từ vào nhóm','<label class="f">Chữ Hán<input name="hanzi" value="'+v('hanzi')+'" placeholder="你好"></label><label class="f">Pinyin<input name="pinyin" value="'+v('pinyin')+'" placeholder="nǐ hǎo"></label><label class="f">Nghĩa tiếng Việt<input name="vi" value="'+v('vi')+'" placeholder="xin chào"></label><label class="f">Câu ví dụ (không bắt buộc)<input name="example" value="'+v('example')+'"></label>','Lưu',m=>{
+  const day=w?(w.day||''):defaultDay();
+  modal(w?'Sửa từ chung':'Thêm từ vào nhóm','<label class="f">Ngày học<input type="date" name="day" value="'+esc(day)+'"></label><label class="f">Chữ Hán<input name="hanzi" value="'+v('hanzi')+'" placeholder="你好"></label><label class="f">Pinyin<input name="pinyin" value="'+v('pinyin')+'" placeholder="nǐ hǎo"></label><label class="f">Nghĩa tiếng Việt<input name="vi" value="'+v('vi')+'" placeholder="xin chào"></label><label class="f">Câu ví dụ (không bắt buộc)<input name="example" value="'+v('example')+'"></label>','Lưu',m=>{
     const g=k=>$('[name="'+k+'"]',m).value.trim();
     if(!g('hanzi')||!g('vi')){toast('Cần nhập chữ Hán và nghĩa.');return false;}
-    const d={hanzi:g('hanzi'),pinyin:g('pinyin'),vi:g('vi'),example:g('example')};
+    const d={hanzi:g('hanzi'),pinyin:g('pinyin'),vi:g('vi'),example:g('example'),day:g('day')};
     const pr=w?G.updDoc(d,'groups',gp.gid,'words',w.id):G.setDoc(Object.assign({addedBy:user.uid,addedByName:myName(),createdAt:Date.now()},d),'groups',gp.gid,'words',G.newId('groups',gp.gid,'words'));
     pr.then(()=>toast('Đã lưu.')).catch(()=>toast('Không lưu được. Kiểm tra mạng và Firestore Rules trong Firebase.'));
   });
 }
 function gbulkModal(){
   const gp=S.gp,G=GA();
-  modal('Nhập nhiều từ vào nhóm','<p class="hint">Mỗi dòng một từ, ngăn cách bằng dấu | hoặc dấu phẩy hoặc Tab:<br><b>chữ Hán | pinyin | nghĩa | câu ví dụ</b></p><label class="f">Dán danh sách từ<textarea name="txt" rows="8" placeholder="你好 | nǐ hǎo | xin chào"></textarea></label><label class="f">Hoặc chọn file CSV, TXT<input type="file" name="file" accept=".csv,.txt,.tsv"></label>','Thêm vào nhóm',m=>{
-    const list=parseWords($('[name="txt"]',m).value).slice(0,400);
+  modal('Nhập nhiều từ vào nhóm','<label class="f">Ngày học<input type="date" name="day" value="'+esc(defaultDay())+'"></label><p class="hint">Mỗi dòng một từ, ngăn cách bằng dấu | hoặc dấu phẩy hoặc Tab:<br><b>chữ Hán | pinyin | nghĩa | câu ví dụ</b></p><label class="f">Dán danh sách từ<textarea name="txt" rows="8" placeholder="你好 | nǐ hǎo | xin chào"></textarea></label><label class="f">Hoặc chọn file CSV, TXT<input type="file" name="file" accept=".csv,.txt,.tsv"></label>','Thêm vào nhóm',m=>{
+    const list=parseWords($('[name="txt"]',m).value).slice(0,400),day=$('[name="day"]',m).value.trim();
     if(!list.length){toast('Chưa đọc được từ nào. Kiểm tra lại định dạng từng dòng.');return false;}
-    G.batchAdd(gp.gid,list.map(d=>Object.assign({addedBy:user.uid,addedByName:myName(),createdAt:Date.now()},d)))
+    G.batchAdd(gp.gid,list.map(d=>Object.assign({addedBy:user.uid,addedByName:myName(),createdAt:Date.now(),day},d)))
       .then(()=>toast('Đã thêm '+list.length+' từ.')).catch(()=>toast('Không thêm được. Kiểm tra mạng và Firestore Rules trong Firebase.'));
   });
   const fi=$('[name="file"]');
   fi.addEventListener('change',()=>{const f=fi.files&&fi.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{$('[name="txt"]').value=String(r.result||'');};r.onerror=()=>toast('Không đọc được file này.');r.readAsText(f,'utf-8');});
 }
-function saveGroupWords(){
-  const gp=S.gp,g=gp.group,ws=gp.words||[];if(!g||!ws.length)return;
-  const lid=uid();
-  db.lessons.push({id:lid,name:String(g.name).slice(0,50)+' (nhóm)'});
+function saveGroupWords(d){
+  const gp=S.gp,g=gp.group;let ws=gp.words||[];
+  if(d&&d!=='all')ws=ws.filter(w=>wordKey(w)===d);
+  if(!g||!ws.length)return;
+  const lid=uid(),suffix=d&&d!=='all'?(d==='none'?'chưa phân ngày':(fmtDay(d).split(', ')[1]||d)):'nhóm';
+  db.lessons.push({id:lid,name:String(g.name).slice(0,40)+' ('+suffix+')'});
   ws.forEach(w=>db.words.push({id:uid(),lessonId:lid,hanzi:w.hanzi,pinyin:w.pinyin||'',vi:w.vi||'',example:w.example||'',note:'',known:false,c:0,w:0}));
   save();toast('Đã lưu '+ws.length+' từ vào bài của bạn.');location.hash='#lesson-'+lid;
 }
-function genRoomQs(words,count,mode){
+function genRoomQs(words,count,mode,extra){
   const ws=shuffle(words).slice(0,count),types=['mcvi','mchz','listen'];
   return ws.map((w,i)=>{
     const type=mode==='mix'?types[i%3]:mode;
     const same=type==='mcvi'?x=>x.vi===w.vi:x=>x.hanzi===w.hanzi;
-    const opts=shuffle([w].concat(shuffle(words.filter(x=>x.id!==w.id&&!same(x))).slice(0,3)));
+    const opts=shuffle([w].concat(shuffle((extra||words).filter(x=>x.id!==w.id&&!same(x))).slice(0,3)));
     return {type,hanzi:w.hanzi,pinyin:w.pinyin||'',vi:w.vi||'',opts:opts.map(o=>({hanzi:o.hanzi,pinyin:o.pinyin||'',vi:o.vi||''})),ans:opts.indexOf(w)};
   });
 }
-function roomModal(){
-  const gp=S.gp;
-  modal('Tạo phòng ôn tập','<label class="f">Số câu<select name="n"><option>5</option><option selected>10</option><option>20</option></select></label><label class="f">Dạng câu hỏi<select name="mode"><option value="mix">Hỗn hợp</option><option value="mcvi">Thấy chữ Hán, chọn nghĩa</option><option value="mchz">Thấy nghĩa, chọn chữ Hán</option><option value="listen">Nghe, chọn chữ Hán</option></select></label><p class="hint">Câu hỏi lấy từ bộ từ chung của nhóm. Tạo xong, bảo bạn bè mở nhóm và bấm Vào phòng.</p>','Tạo phòng',m=>{
-    const n=+$('[name="n"]',m).value,mode=$('[name="mode"]',m).value;
-    const qs=genRoomQs(gp.words||[],n,mode);
+function roomModal(day){
+  const gp=S.gp,ws=gp.words||[];
+  const keys=Array.from(new Set(ws.map(wordKey))).sort().reverse().filter(k=>k!=='none');
+  if(ws.some(w=>wordKey(w)==='none'))keys.push('none');
+  const scope='<option value="all">Tất cả từ của nhóm ('+ws.length+')</option>'+keys.map(k=>'<option value="'+esc(k)+'"'+(day===k?' selected':'')+'>'+esc(fmtDay(k))+' ('+ws.filter(w=>wordKey(w)===k).length+' từ)</option>').join('');
+  modal('Tạo phòng ôn tập','<label class="f">Ôn từ của<select name="scope">'+scope+'</select></label><label class="f">Số câu<select name="n"><option>5</option><option selected>10</option><option>20</option></select></label><label class="f">Dạng câu hỏi<select name="mode"><option value="mix">Hỗn hợp</option><option value="mcvi">Thấy chữ Hán, chọn nghĩa</option><option value="mchz">Thấy nghĩa, chọn chữ Hán</option><option value="listen">Nghe, chọn chữ Hán</option></select></label><p class="hint">Tạo xong, bảo bạn bè mở nhóm và bấm Vào phòng.</p>','Tạo phòng',m=>{
+    const sc=$('[name="scope"]',m).value,n=+$('[name="n"]',m).value,mode=$('[name="mode"]',m).value;
+    const pool=sc==='all'?ws:ws.filter(w=>wordKey(w)===sc);
+    const qs=genRoomQs(pool,n,mode,ws);
     if(qs.length<2){toast('Cần ít nhất 2 từ để tạo phòng.');return false;}
     const G=GA(),rid=G.newId('groups',gp.gid,'rooms');
     G.setDoc({hostUid:user.uid,hostName:myName(),status:'lobby',cur:0,phase:'q',total:qs.length,qs,players:{[user.uid]:{name:myName()}},createdAt:Date.now()},'groups',gp.gid,'rooms',rid)
@@ -1138,6 +1179,104 @@ function saveMissed(){
   save();toast('Đã lưu '+missed.length+' từ vào bài của bạn.');location.hash='#lesson-'+lid;
 }
 
+/* ---------- voice guess in groups ---------- */
+const VMAX=6;
+const V={stream:null,mr:null,chunks:[],timer:0,cancelled:false};
+function vcCancel(){
+  V.cancelled=true;clearInterval(V.timer);
+  const mr=V.mr;V.mr=null;
+  try{if(mr&&mr.state!=='inactive')mr.stop();}catch(e){}
+  if(V.stream){V.stream.getTracks().forEach(t=>t.stop());V.stream=null;}
+}
+function vcStop(){clearInterval(V.timer);try{if(V.mr&&V.mr.state==='recording')V.mr.stop();}catch(e){}}
+function playData(u){const a=new Audio(u);a.play().catch(()=>toast('Không phát được bản ghi âm. Trình duyệt của bạn có thể chưa hỗ trợ định dạng này.'));}
+async function vcStart(){
+  const gp=S.gp,vc=gp.vc;
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||!window.MediaRecorder){toast('Trình duyệt này chưa hỗ trợ ghi âm.');return;}
+  try{V.stream=await navigator.mediaDevices.getUserMedia({audio:true});}
+  catch(e){toast('Không mở được micro. Hãy cho phép micro cho trang này.');return;}
+  V.cancelled=false;V.chunks=[];
+  let mr;try{mr=new MediaRecorder(V.stream,{audioBitsPerSecond:24000});}catch(e){mr=new MediaRecorder(V.stream);}
+  V.mr=mr;
+  mr.ondataavailable=e=>{if(e.data&&e.data.size)V.chunks.push(e.data);};
+  mr.onstop=()=>{
+    clearInterval(V.timer);
+    if(V.stream){V.stream.getTracks().forEach(t=>t.stop());V.stream=null;}
+    if(V.mr!==mr||V.cancelled)return;
+    const blob=new Blob(V.chunks,{type:mr.mimeType||'audio/webm'});
+    const fr=new FileReader();
+    fr.onload=()=>{
+      if(S.gp!==gp||gp.vc!==vc)return;
+      const url=String(fr.result||'');
+      if(url.length>380000){toast('Bản ghi quá lớn. Hãy ghi ngắn hơn.');vc.phase='pick';}
+      else{vc.dataUrl=url;vc.phase='review';}
+      render();
+    };
+    fr.readAsDataURL(blob);
+  };
+  vc.phase='rec';render();
+  mr.start();
+  const t0=Date.now();
+  V.timer=setInterval(()=>{
+    const el=Date.now()-t0,o=$('#vc-time');
+    if(o)o.textContent=(el/1000).toFixed(1)+' / '+VMAX+' giây';
+    if(el>=VMAX*1000)vcStop();
+  },100);
+}
+async function vcSend(){
+  const gp=S.gp,vc=gp.vc,ws=gp.words||[],w=ws.find(x=>x.id===vc.wordId);
+  if(!w||!vc.dataUrl||vc.sending)return;
+  vc.sending=true;render();
+  const opts=shuffle([w].concat(shuffle(ws.filter(x=>x.id!==w.id&&x.hanzi!==w.hanzi)).slice(0,3)));
+  const G=GA();
+  try{
+    await G.setDoc({ownerUid:user.uid,ownerName:myName(),wordId:w.id,hanzi:w.hanzi,pinyin:w.pinyin||'',vi:w.vi||'',opts:opts.map(o=>({hanzi:o.hanzi,pinyin:o.pinyin||'',vi:o.vi||''})),ans:opts.indexOf(w),audio:vc.dataUrl,createdAt:Date.now(),guesses:{}},'groups',gp.gid,'voices',G.newId('groups',gp.gid,'voices'));
+    toast('Đã gửi bản ghi âm cho nhóm.');gp.vc=null;
+  }catch(e){vc.sending=false;toast('Không gửi được. Kiểm tra mạng và Firestore Rules trong Firebase.');}
+  if(S.gp===gp)render();
+}
+function watchVoices(){
+  const gp=S.gp;if(gp.vwatch||noGroups())return;gp.vwatch=true;
+  const un=GA().watchCol(l=>{if(S.gp!==gp)return;gp.voices=l;render();},()=>{gp.voices=[];if(S.gp===gp)render();toast('Không tải được bản ghi âm. Kiểm tra Firestore Rules trong Firebase.');},'createdAt:15','groups',gp.gid,'voices');
+  S.unsubs=(S.unsubs||[]).concat([un]);
+}
+function gpVoice(ws){
+  const gp=S.gp;
+  if(gp.vc)return gpVoiceRec(ws);
+  const bar='<div class="toolbar"><button class="btn pri" data-act="vc-new"'+(ws.length>=2?'':' disabled')+'>'+MIC+' Ghi âm một từ</button></div>'+(ws.length<2?'<p class="hint">Cần ít nhất 2 từ trong bộ từ chung.</p>':'');
+  if(!gp.voices)return bar+'<div class="empty">Đang tải…</div>';
+  if(!gp.voices.length)return bar+'<div class="empty">Chưa có bản ghi âm nào. Ghi âm một từ rồi gửi, bạn bè nghe và đoán xem đó là từ nào.</div>';
+  return bar+gp.voices.map(voiceCard).join('');
+}
+function gpVoiceRec(ws){
+  const vc=S.gp.vc,w=ws.find(x=>x.id===vc.wordId);
+  if(vc.phase==='pick'){
+    return '<div class="card"><h2>Ghi âm một từ</h2><p class="muted">Chọn từ rồi đọc to, rõ. Bạn bè sẽ nghe và đoán xem đó là từ nào. Mỗi bản ghi tối đa '+VMAX+' giây.</p><label class="f">Từ cần đọc<select id="vc-word"><option value="rand">Ngẫu nhiên</option>'+ws.map(x=>'<option value="'+esc(x.id)+'"'+(vc.sel===x.id?' selected':'')+'>'+esc(x.hanzi)+'  '+esc(x.pinyin)+'</option>').join('')+'</select></label><div class="row"><button class="btn pri" data-act="vc-go">'+MIC+' Bắt đầu ghi âm</button><button class="btn" data-act="vc-cancel">Huỷ</button></div><p class="note">Trang chỉ ghi âm khi bạn bấm nút và sẽ xin quyền dùng micro. Bản ghi chỉ được gửi cho nhóm khi bạn bấm Gửi.</p></div>';
+  }
+  const wc=w?'<div class="center"><div class="hzbox" style="margin:0 auto 8px"><span class="hz" style="font-size:'+hzSize(w.hanzi)+'px">'+esc(w.hanzi)+'</span></div><div class="py lg">'+esc(w.pinyin)+'</div><div class="vi lg">'+esc(w.vi)+'</div></div>':'';
+  if(vc.phase==='rec')return '<div class="card center">'+wc+'<p class="rtime" id="vc-time">0.0 / '+VMAX+' giây</p><button class="bigbtn" data-act="vc-stop" aria-label="Dừng ghi âm">'+STOP+'</button><p class="hint" style="margin-top:8px">Đang ghi âm. Hãy đọc từ trên màn hình.</p></div>';
+  return '<div class="card center">'+wc+'<p class="muted" style="margin-top:12px">Đã ghi xong. Nghe lại để chắc là rõ.</p><div class="row" style="justify-content:center"><button class="btn" data-act="vc-play" data-id="pending">'+PLAY+' Nghe bản ghi</button><button class="btn" data-act="vc-retry">Ghi lại</button><button class="btn pri" data-act="vc-send"'+(vc.sending?' disabled':'')+'>'+(vc.sending?'Đang gửi…':'Gửi cho nhóm')+'</button><button class="btn txt" data-act="vc-cancel">Huỷ</button></div></div>';
+}
+function voiceCard(v){
+  const mine=v.ownerUid===user.uid,gs=v.guesses||{},my=gs[user.uid],opts=Array.isArray(v.opts)?v.opts:[];
+  const ans=opts[v.ans]||{hanzi:v.hanzi,pinyin:v.pinyin,vi:v.vi};
+  const head='<div class="toolbar" style="margin-bottom:8px"><button class="iconbtn" data-act="vc-play" data-id="'+esc(v.id)+'" aria-label="Nghe bản ghi">'+PLAY+'</button><div class="grow"><b>Ghi âm của '+esc(v.ownerName||'bạn học')+(mine?' (bạn)':'')+'</b><div class="hint">'+esc(new Date(v.createdAt||0).toLocaleString('vi-VN'))+'</div></div>'+(mine?'<button class="btn txt sm danger" data-act="vc-del" data-id="'+esc(v.id)+'">Xoá</button>':'')+'</div>';
+  const answerLine='<div class="fb"><span class="hz">'+esc(ans.hanzi)+'</span> '+esc(ans.pinyin)+' = '+esc(ans.vi)+'</div>';
+  let body;
+  if(mine){
+    const list=Object.keys(gs).map(u=>{const g=gs[u],o=opts[g.c];return '<li>'+esc(g.name||'Bạn học')+': '+esc(o?o.hanzi:'?')+' '+(g.c===v.ans?'✓':'✗')+'</li>';}).join('');
+    body='<p class="muted" style="margin:0">Từ bạn đã ghi:</p>'+answerLine+(list?'<ul class="plist">'+list+'</ul>':'<p class="hint">Chưa ai đoán.</p>');
+  }else{
+    const done=!!my;
+    const buttons='<div class="opts">'+opts.map((o,j)=>{
+      let cls='opt';if(done){if(j===v.ans)cls+=' ok';else if(my.c===j)cls+=' bad';}
+      return '<button class="'+cls+'" data-act="vc-pick" data-id="'+esc(v.id)+'" data-i="'+j+'"'+(done?' disabled':'')+'><span class="hz">'+esc(o.hanzi)+'</span><small>'+esc(o.pinyin)+'</small></button>';
+    }).join('')+'</div>';
+    body=(done?'':'<p class="muted" style="margin:0">Nghe rồi chọn từ bạn nghe được:</p>')+buttons+(done?'<div class="fb '+(my.c===v.ans?'ok':'bad')+'"><b>'+(my.c===v.ans?'Đoán đúng!':'Chưa đúng.')+'</b><div class="ink"><span class="hz">'+esc(ans.hanzi)+'</span> '+esc(ans.pinyin)+' = '+esc(ans.vi)+'</div></div>':'');
+  }
+  return '<section class="card" style="margin-bottom:14px">'+head+body+'</section>';
+}
+
 /* ---------- backup ---------- */
 function openBackup(){
   const m=modal('Sao lưu dữ liệu','<p class="hint">Dữ liệu được lưu trong trình duyệt này. Sao chép đoạn văn bản bên dưới và cất đi để dùng trên máy khác, hoặc dán vào đây để khôi phục.</p><label class="f">Dữ liệu<textarea id="bk" rows="8" spellcheck="false">'+esc(JSON.stringify(db))+'</textarea></label><div class="row"><button class="btn" data-act="bk-copy">Sao chép</button><button class="btn" data-act="bk-import">Dùng dữ liệu trong ô</button><button class="btn danger" data-act="bk-reset">Khôi phục dữ liệu mẫu</button></div>',null,null,'Đóng');
@@ -1166,13 +1305,28 @@ function act(a,el){
     case 'sh-unshare':unshareById(id,()=>{if(S.sh&&S.sh.list)S.sh.list=S.sh.list.filter(x=>x.id!==id);render();});break;
     case 'gr-new':groupNewModal();break;
     case 'gr-join':groupJoinModal();break;
-    case 'gp-tab':S.gp.tab=el.dataset.t;render();break;
+    case 'gp-tab':{const gp=S.gp,t=el.dataset.t;if(t!==gp.tab){vcCancel();gp.vc=null;gp.tab=t;if(t==='voice')watchVoices();}render();break;}
+    case 'vc-new':S.gp.vc={phase:'pick',sel:'rand',wordId:'',dataUrl:'',sending:false};render();break;
+    case 'vc-go':{const gp=S.gp,vc=gp.vc,ws=gp.words||[];if(!ws.length)break;const pick=vc.sel==='rand'?ws[Math.floor(Math.random()*ws.length)]:(ws.find(x=>x.id===vc.sel)||ws[0]);vc.wordId=pick.id;vcStart();break;}
+    case 'vc-stop':vcStop();break;
+    case 'vc-retry':S.gp.vc.dataUrl='';vcStart();break;
+    case 'vc-cancel':vcCancel();S.gp.vc=null;render();break;
+    case 'vc-send':vcSend();break;
+    case 'vc-play':{if(id==='pending'){if(S.gp.vc)playData(S.gp.vc.dataUrl);}else{const v=(S.gp.voices||[]).find(x=>x.id===id);if(v)playData(v.audio);}break;}
+    case 'vc-pick':{
+      const gp=S.gp,v=(gp.voices||[]).find(x=>x.id===id);
+      if(!v||(v.guesses&&v.guesses[user.uid])||v.ownerUid===user.uid)break;
+      GA().updDoc({['guesses.'+user.uid]:{name:myName(),c:+el.dataset.i}},'groups',gp.gid,'voices',id).catch(()=>toast('Không gửi được câu trả lời. Kiểm tra mạng rồi thử lại.'));
+      break;
+    }
+    case 'vc-del':ask('Xoá bản ghi âm này khỏi nhóm?','Xoá',()=>{GA().delDoc('groups',S.gp.gid,'voices',id).catch(()=>toast('Không xoá được. Kiểm tra mạng rồi thử lại.'));});break;
     case 'gp-add':gwordModal();break;
     case 'gp-edit':gwordModal(id);break;
     case 'gp-del':ask('Xoá từ này khỏi bộ từ chung của nhóm? Mọi người trong nhóm sẽ không thấy từ này nữa.','Xoá từ',()=>{GA().delDoc('groups',S.gp.gid,'words',id).catch(()=>toast('Không xoá được. Kiểm tra mạng rồi thử lại.'));});break;
     case 'gp-bulk':gbulkModal();break;
-    case 'gp-save':saveGroupWords();break;
-    case 'gp-room':roomModal();break;
+    case 'gp-save':saveGroupWords(el.dataset.d);break;
+    case 'gp-day':S.gp.day=el.dataset.d;render();break;
+    case 'gp-room':roomModal(el.dataset.d);break;
     case 'gp-code-copy':{const code=S.gp.group.code;if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(code).then(()=>toast('Đã sao chép mã '+code),()=>toast('Mã nhóm: '+code));else toast('Mã nhóm: '+code);break;}
     case 'gp-leave':ask('Rời nhóm này? Bạn sẽ không thấy bộ từ chung nữa, nhưng có thể vào lại bằng mã.','Rời nhóm',()=>{GA().updDoc({members:GA().arrRemove(user.uid)},'groups',S.gp.gid).then(()=>{toast('Đã rời nhóm.');location.hash='#groups';}).catch(()=>toast('Không rời được nhóm. Thử lại sau.'));});break;
     case 'rm-start':{const rm=S.rm;if(rm.doc&&rm.doc.status==='lobby')roomRef(rm,{status:'playing',cur:0,phase:'q'});break;}
@@ -1272,6 +1426,7 @@ document.addEventListener('click',e=>{
 document.addEventListener('change',e=>{
   const el=e.target;
   if(el.tagName==='INPUT'&&el.dataset.act&&el.type==='checkbox')act(el.dataset.act,el);
+  if(el.id==='vc-word'&&S.gp&&S.gp.vc)S.gp.vc.sel=el.value;
 });
 document.addEventListener('submit',e=>{
   const f=e.target.closest('[data-form]');
@@ -1350,7 +1505,7 @@ if(!configured())start();else window.addEventListener('fb-ready',start,{once:tru
             arrRemove:(...v)=>Fs.arrayRemove(...v),
             myGroups:async uid=>{const r=await Fs.getDocs(Fs.query(C('groups'),Fs.where('members','array-contains',uid)));return r.docs.map(d=>Object.assign({id:d.id},d.data()));},
             watchDoc:(cb,err,...p)=>Fs.onSnapshot(D(...p),s=>cb(snap(s)),err),
-            watchCol:(cb,err,ord,...p)=>{const c=C(...p);const q=ord?Fs.query(c,Fs.orderBy(ord,'desc'),Fs.limit(300)):c;return Fs.onSnapshot(q,s=>cb(s.docs.map(d=>Object.assign({id:d.id},d.data()))),err);},
+            watchCol:(cb,err,ord,...p)=>{const c=C(...p);const od=String(ord||'').split(':');const q=ord?Fs.query(c,Fs.orderBy(od[0],'desc'),Fs.limit(+od[1]||300)):c;return Fs.onSnapshot(q,s=>cb(s.docs.map(d=>Object.assign({id:d.id},d.data()))),err);},
             batchAdd:async(gid,list)=>{const b=Fs.writeBatch(store);list.forEach(w=>b.set(Fs.doc(C('groups',gid,'words')),w));await b.commit();}
           };
         })()
